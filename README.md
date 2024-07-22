@@ -5,8 +5,12 @@
 ## Usage
 
 ## Frequently Asked Questions
+-->
+## References
 
-## References -->
+### Libraries
+- playwright
+- pytest-playwright
 
 ### Github
 Visit https://github.com/JermyNeutron/driveondeals
