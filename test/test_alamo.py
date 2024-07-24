@@ -7,14 +7,43 @@ def test_basic_search(page: Page):
 
     # expect a title to contain this substring
     expect(page).to_have_title(re.compile("Alamo Rent a Car"))
-
+    
+    # wait for page to finish load state
+    page.wait_for_load_state("load")
+    
     # enter location
     page.locator("#pickupLocation").fill("SNA")
+    
+    # select first option
+    page.wait_for_selector("role=option")
+    page.get_by_role("option").first.click()
 
+    # Bottom anchor pop-up
+    page.get_by_role("button", name="Close").click()
+
+    # Time to close pop-up and open pick-up date
+    page.wait_for_timeout(1000)
+
+    # expect to choose locator
+    date_to_select = page.locator('div[role="button"][aria-label="Choose Wednesday, July 24th, 2024"]')
+    
+    try:
+        expect(date_to_select).to_be_visible()
+    except:
+        page.get_by_role("button", name="Pick-up Date required").click()
+        expect(date_to_select).to_be_visible()
+        
+    date_to_select.click()
+
+
+    # page.locator('div[role="button"][aria-label="Choose Wednesday, July 24th, 2024"]').click()
+
+
+    
     #screenshot
     page.screenshot(path="test/screenshots/test_alamo.png")
 
-# def test_basic_search():
+# def basic_search():
 #     with sync_playwright() as p:
 #         browser = p.webkit.launch()
 #         page = browser.new_page()
@@ -26,4 +55,4 @@ def test_basic_search(page: Page):
 #         page.screenshot(path="test/screenshots/test_alamo.png")
 #         browser.close()
 
-# test_basic_search()
+# basic_search()
