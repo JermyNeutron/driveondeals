@@ -61,7 +61,8 @@ def test_basic_search(test, page: Page):
     #screenshot
     test and print(f"step 11: {find_time()}")
     current_date = time.strftime("%Y%m%d")
-    page.screenshot(path=f"test/screenshots/{current_date}_test.png") # screenshots ignored
+    page.screenshot(path=f"test/screenshots/{current_date}_test.png")
+    test and print("screenshot taken.")
 
 # def basic_search():
 #     with sync_playwright() as p:
