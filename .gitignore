@@ -1,5 +1,6 @@
 # Miscellaneous
 scratch/
+test/screenshots/*_test*.png
 
 # Pytest cache
 .pytest_cache
