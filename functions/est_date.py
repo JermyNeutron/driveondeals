@@ -91,13 +91,13 @@ def get_now(test: bool, hints_enabled: bool) -> tuple[str, str, str, str, str]:
     date_current_month_str = month_int2str(test, hints_enabled, date_current_month_ind)
     date_current_year = time.strftime("%Y")
     if hints_enabled:
-        print(f"HINT {get_now}: {{time_current}}: {time_current}")
+        print(f"\nHINT {get_now}: {{time_current}}: {time_current}")
         print(f"HINT {get_now}: {{date_current_day}}: {date_current_day}")
         print(f"HINT {get_now}: {{date_current_day_sfx}}: {date_current_day_sfx}")
         print(f"HINT {get_now}: {{date_dow}}: {date_dow}")
         print(f"HINT {get_now}: {{date_current_month_ind}}: {date_current_month_ind}")
         print(f"HINT {get_now}: {{date_current_month_str}}: {date_current_month_str}")
-        print(f"HINT {get_now}: {{date_current_year}}: {date_current_year}")
+        print(f"HINT {get_now}: {{date_current_year}}: {date_current_year}\n")
     return time_current, date_current_day, date_current_day_sfx, date_dow, date_current_month_ind, date_current_month_str, date_current_year
 
 
