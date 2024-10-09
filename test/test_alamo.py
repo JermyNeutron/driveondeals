@@ -2,6 +2,7 @@ import re
 import time
 
 from playwright.sync_api import Page, expect, sync_playwright
+from functions import file_utils
 
 def find_time():
     current_time = time.strftime("%H:%M:%S")
@@ -24,7 +25,8 @@ def test_basic_search(test: bool, hints_enabled: bool, get_now_aria_label: str, 
     param_timeout_1 = 1000 # VERIFIED timeout for initial pop-up
     param_timeout_2 = 1000 # Timeout preceding browser screenshot, stored test/screenshots
     test_pu_location = "SNA"
-    screenshot_path = f"test/screenshots/{current_date}_test.png"
+    screenshot_base = f"{current_date}_test"
+    folder_path = f"test/screenshots/{current_date}_test"
     checkmark = "\u2713"
 
 
@@ -127,23 +129,13 @@ def test_basic_search(test: bool, hints_enabled: bool, get_now_aria_label: str, 
     
     # Screenshot
     page.wait_for_timeout(param_timeout_2)
+    # screenshot_path = f"test/screenshots/{current_date}_test.png"
     hints_enabled and print(f"HINT {test_basic_search}: Step 11: {find_time()}: # Screenshot ...", end=" ", flush=True)
+    file_utils.verify_folder_path(folder_path)
+    screenshot_path = file_utils.get_unique_filename(screenshot_base, folder_path)
+
     page.screenshot(path=screenshot_path)
     hints_enabled and print(f"taken and stored at {screenshot_path}. {checkmark}", flush=True)
-
-# def basic_search():
-#     with sync_playwright() as p:
-#         browser = p.webkit.launch()
-#         page = browser.new_page()
-#         page.goto("https://www.alamo.com/en/reserve.html#/start")
-#         page.wait_for_load_state("load")
-#         # page.locator("#pickupLocation").fill("SNA")
-#         page.get_by_role("combobox", name="Location (Airport, City, or ZIP/Postal Code)*").fill("SNA")
-#         page.wait_for_timeout(1000)
-#         page.screenshot(path="test/screenshots/test_alamo.png")
-#         browser.close()
-
-# basic_search()
 
 
 if __name__ == "__main__":
