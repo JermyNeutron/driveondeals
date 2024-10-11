@@ -2,22 +2,6 @@ import time
 from datetime import datetime
 
 
-months_poplist = {
-    "01": "January",
-    "02": "February",
-    "03": "March",
-    "04": "April",
-    "05": "May",
-    "06": "June",
-    "07": "July",
-    "08": "August",
-    "09": "September",
-    "10": "October",
-    "11": "November",
-    "12": "December",
-}
-
-
 # Standard current time retrieval
 def get_now(test: bool, hints_enabled: bool) -> tuple[str, str, str, str, str]:
     """
@@ -73,14 +57,6 @@ def get_now(test: bool, hints_enabled: bool) -> tuple[str, str, str, str, str]:
         date_current = time.strftime("")
         # possible function to restrict backward reseverations
         pass
-
-
-    def month_int2str(test: bool, hints_enabled: bool, month_int: str):
-        for month_ind, month_str in months_poplist.items():
-            if month_ind == month_int:
-                month_return = month_str
-                hints_enabled and print(f"HINT {month_int2str}: {month_int} returning as {month_return}")
-                return month_return
     
 
     time_current = time.strftime("%H:%M:%S")
@@ -88,7 +64,7 @@ def get_now(test: bool, hints_enabled: bool) -> tuple[str, str, str, str, str]:
     date_current_day_sfx = find_suffix(test, hints_enabled, date_current_day) # (str)
     date_dow = datetime.now().strftime("%A")
     date_current_month_ind = time.strftime("%m")
-    date_current_month_str = month_int2str(test, hints_enabled, date_current_month_ind)
+    date_current_month_str = datetime.now().strftime("%B")
     date_current_year = time.strftime("%Y")
     if hints_enabled:
         print(f"\nHINT {get_now}: {{time_current}}: {time_current}")
