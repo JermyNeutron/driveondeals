@@ -118,12 +118,14 @@ def test_basic_search(test: bool, hints_enabled: bool, get_now_aria_label: str, 
         print(f"HINT {test_basic_search}: Step 12 {find_time()}: Next available time unable to be selected: {e}", flush=True)
 
 
+    # 13. Default Return Date Search
+    # need to calculate default return date
+
     """
     STEPS Remaining*
-    13. Default Return Date Search
-    14. Default Return Date Click
-    15. Return Next Available Time Search
-    16. Return Next Available Time Click
+    # 14. Default Return Date Click
+    # 15. Return Next Available Time Search
+    # 16. Return Next Available Time Click
     """
 
     
