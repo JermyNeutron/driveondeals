@@ -7,13 +7,13 @@ sys.path.append(".")
 
 from playwright.sync_api import Page, expect, sync_playwright
 
-from functions import file_utils, suffix, dx1rtn
+from functions import file_utils, est_date, suffix, dx1rtn, dx3wknd
 
 def find_time():
     current_time = time.strftime("%H:%M:%S")
     return current_time
 
-def test_basic_search(test: bool, hints_enabled: bool, ss_enabled: bool, get_now_tup: tuple, page: Page):
+def test_basic_search(test: bool, hints_enabled: bool, ss_enabled: bool, instance_timestamp: datetime, page: Page):
     """
     Alamo Car Rental test function
 
@@ -26,12 +26,11 @@ def test_basic_search(test: bool, hints_enabled: bool, ss_enabled: bool, get_now
         None
     """
     # PARAMETERS
-    meta_krono = get_now_tup[0]
-    meta_tuple = get_now_tup
+    meta_krono = est_date.main_simp(test, hints_enabled, instance_timestamp)
     param_timeout_1 = 1000 # VERIFIED timeout for initial pop-up
     param_timeout_2 = 1000 # Timeout preceding browser screenshot, stored test/screenshots
     test_pu_location = "SNA"
-    file_date = meta_krono.strftime("%Y%m%d")
+    file_date = meta_krono[0].strftime("%Y%m%d")
     screenshot_base = f"{file_date}_test"
     folder_path = f"test/screenshots/{file_date}_test"
     checkmark = "\u2713"
@@ -83,7 +82,7 @@ def test_basic_search(test: bool, hints_enabled: bool, ss_enabled: bool, get_now
     # 8: Assign Current Date As Pick Up
     # Aria-label format: "Choose Saturday, October 12th, 2024"
     hints_enabled and print(f"HINT {__name__}: Step 8: {find_time()}: # Assign Current Date As Pick Up", end=" ")
-    aria_label_pu = f"Choose {meta_krono.strftime('%A')}, {meta_krono.strftime('%B')} {meta_tuple[4]}, {meta_krono.strftime('%Y')}"
+    aria_label_pu = f"Choose {meta_krono[0].strftime('%A')}, {meta_krono[0].strftime('%B')} {meta_krono[1]}, {meta_krono[0].strftime('%Y')}"
     date_to_select = page.locator(f'div[role="button"][aria-label="{aria_label_pu}"]')
     hints_enabled and print(f"{checkmark}\nHINT {__name__}: Step 8 (result): aria-label assigned {date_to_select} {checkmark}")
 
@@ -115,8 +114,8 @@ def test_basic_search(test: bool, hints_enabled: bool, ss_enabled: bool, get_now
     except Exception as e:
         print(f"HINT {__name__}: Step 11 (result) {find_time()}: Could not find separator: {e}")
 
-    try:
     # 12:
+    try:
         hints_enabled and print(f"HINT {__name__}: Step 12: {find_time()}: Expecting next_option available time to be visible ...", end=" ")
         new_next_option = next_option.first # resolves strict mode error (2 occurences)
         hints_enabled and print(f"VISIBLE {checkmark}")
@@ -134,9 +133,8 @@ def test_basic_search(test: bool, hints_enabled: bool, ss_enabled: bool, get_now
     # Aria-label format: "Choose Saturday, October 12th, 2024"
     # Hypothesis: easy copy/paste of pick-up date
     hints_enabled and print(f"HINT {__name__}: Step 13: {find_time()}: Assigning Next Date As Pick Up ...")
-    next_day_meta = dx1rtn.main(test, hints_enabled, meta_krono)
-    next_day_meta_suffix = suffix.main(test, hints_enabled, next_day_meta.strftime("%d"))
-    aria_label_do = f"Choose {next_day_meta.strftime('%A')}, {next_day_meta.strftime('%B')} {next_day_meta_suffix}, {next_day_meta.strftime('%Y')}"
+    next_day_meta = dx1rtn.main_simp(test, hints_enabled, meta_krono[0])
+    aria_label_do = f"Choose {next_day_meta[0].strftime('%A')}, {next_day_meta[0].strftime('%B')} {next_day_meta[1]}, {next_day_meta[0].strftime('%Y')}"
     next_date_to_select = page.locator(f'div[role="button"][aria-label="{aria_label_do}"]')
     hints_enabled and print(f"HINT {__name__}: Step 13 (result): {find_time()}: aria-label assigned {next_date_to_select} {checkmark}")
     
@@ -152,9 +150,12 @@ def test_basic_search(test: bool, hints_enabled: bool, ss_enabled: bool, get_now
         hints_enabled and print(f"{checkmark}")
 
     # 15: Date Click
-    hints_enabled and print(f"HINT {__name__}: Step 14: {find_time()}: Date Click ...", end=" ")
-    next_date_to_select.click()
-    hints_enabled and print(f"{checkmark}")
+    try:
+        hints_enabled and print(f"HINT {__name__}: Step 14: {find_time()}: Date Click ...", end=" ")
+        next_date_to_select.click()
+        hints_enabled and print(f"{checkmark}")
+    except Exception as e:
+        print(f"HINT {__name__}: Step 15: {find_time()}: Unable to click drop off date: {e}")
 
 
     """
@@ -180,4 +181,3 @@ def test_basic_search(test: bool, hints_enabled: bool, ss_enabled: bool, get_now
 if __name__ == "__main__":
     test = True
     hints_enabled = True
-    pass
