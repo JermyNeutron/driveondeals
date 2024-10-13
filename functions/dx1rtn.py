@@ -1,10 +1,20 @@
 # Calculates next day return tuple
+import sys
+sys.path.append(".")
 
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 
-def main(test: bool, hints_enabled: bool, meta_krono: datetime = "DEFAULT") -> datetime:
+from functions import suffix
+
+
+# Custom texts
+checkmark = "\u2713"
+xmark = "\u2715"
+
+
+def main(test: bool, hints_enabled: bool, date_pointer: datetime = "DEFAULT") -> datetime:
     """
-    Calculates next day return.
+    Determines immediate next calendar day and returns datetime object with easy referencing.
 
     Args:
         test (bool)
@@ -13,7 +23,7 @@ def main(test: bool, hints_enabled: bool, meta_krono: datetime = "DEFAULT") -> d
 
     Returns:
         tuple: a tuple containing:
-            0) meta_krono (tup): Everything retrieved from datetime.now()
+            0) date_pointer (datetime): Returning original datetime object.
             1) current_time (str): The current time in format HH:MM:SS, e.g. "07:25:40".
             2) date_current (str): The current date (YYYY-MM-DD).
             3) date_current_day (str): The current day (DD).
@@ -23,32 +33,60 @@ def main(test: bool, hints_enabled: bool, meta_krono: datetime = "DEFAULT") -> d
             7) date_current_month_str (str): The current month, e.g. September.
             8) date_current_year (str): The current year (YYYY).
     """
-    if meta_krono == "DEFAULT":
-        meta_krono = datetime.fromisoformat("2024-10-12 19:18:16.708059")
-        hints_enabled and print(f"\nHINT {__name__}: Function defaulted to ambiguous datetime object!!!", flush=True)
-    hints_enabled and print(f"\nHINT {__name__}: Receiving meta_krono as {type(meta_krono)}", flush=True)
+    if date_pointer == "DEFAULT":
+        date_pointer = datetime.fromisoformat("2024-10-12 19:18:16.708059")
+        hints_enabled and print(f"\nHINT {__name__}: Function defaulted to ambiguous datetime object!!!", end="", flush=True)
+    hints_enabled and print(f"\nHINT {__name__}: Receiving date_pointer as {date_pointer}", flush=True)
     
-    temp_year = int(meta_krono.strftime("%Y"))
-    temp_month = int(meta_krono.strftime("%m"))
-    temp_day = int(meta_krono.strftime("%d"))
+    rtn_tuple = []
+    next_day_datetime = date_pointer + timedelta(days=1)
+    rtn_tuple.append(next_day_datetime)
+    time_current = next_day_datetime.strftime("%H:%M:%S")
+    rtn_tuple.append(time_current)
+    date_current = next_day_datetime.strftime("%Y-%m-%d")
+    rtn_tuple.append(date_current)
+    date_current_day = next_day_datetime.strftime("%d")
+    rtn_tuple.append(date_current_day)
+    date_current_day_sfx = suffix.main(test, hints_enabled, date_current_day)
+    rtn_tuple.append(date_current_day_sfx)
+    date_dow = next_day_datetime.strftime("%A")
+    rtn_tuple.append(date_dow)
+    date_current_mont_int = next_day_datetime.strftime("%m")
+    rtn_tuple.append(date_current_mont_int)
+    date_current_mont_str = next_day_datetime.strftime("%B")
+    rtn_tuple.append(date_current_mont_str)
+    date_current_year = next_day_datetime.strftime("%Y")
+    rtn_tuple.append(date_current_year)
 
-    # Attempt to add one calendar day
-    while True:
-        try:
-            temp_day += 1
-            next_day_date = date(temp_year, temp_month, temp_day)
-            break
-        except ValueError as e:
-            if (temp_month + 1) % 13:
-                temp_year += 1
-                temp_month = 1
-                temp_day = 0
-            else:
-                temp_month += 1
-                temp_day = 0
+    hints_enabled and print(f"HINT {__name__}: Returning newly created DEFAULT datetime tuple for NEXT day: {next_day_datetime} {checkmark}\n", flush=True)
+    return tuple(rtn_tuple)
 
-    hints_enabled and print(f"HINT {__name__}: Returning newly created datetime object for {next_day_date} \u2713\n", flush=True)
-    return datetime.fromisoformat(f"{next_day_date} {meta_krono.strftime('%H:%M:%S.%f')}")
+
+def main_simp(test: bool, hints_enabled: bool, date_pointer: datetime = "DEFAULT") -> tuple[datetime, str]:
+    """
+    Determines immediate next calendar day and returns datetime object with suffix ONLY.
+
+    Args:
+        test (bool)
+        hints_enabled (bool)
+        date_pointer (datetime)
+
+    Returns:
+        tuple: a tuple containing:
+            0) date_pointer (datetime): Returning original datetime object.
+            1) date_current_day_sfx (str): (DD) with suffix, e.g. 27th.
+    """
+    if date_pointer == "DEFAULT":
+        date_pointer = datetime.fromisoformat("2024-10-12 19:18:16.708059")
+    hints_enabled and print(f"\nHINT {__name__}: Function defaulted to ambiguous datetime object!!!", flush=True)
+    rtn_tuple = []
+    next_day_datetime = date_pointer + timedelta(days=1)
+    rtn_tuple.append(next_day_datetime)
+    next_day_suffix = suffix.main(test, hints_enabled, next_day_datetime.strftime("%d"))
+    rtn_tuple.append(next_day_suffix)
+    
+    hints_enabled and print(f"HINT {__name__}: Returning newly created SIMPLE datetime tuple for NEXT day: {next_day_datetime} {checkmark}\n", flush=True)
+    return tuple(rtn_tuple)
 
 
 if __name__ == "__main__":
