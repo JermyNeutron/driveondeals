@@ -37,7 +37,7 @@ def main(test: bool, hints_enabled: bool, date_pointer: datetime) -> tuple[datet
     time_current = date_pointer.strftime("%H:%M:%S")
     date_current = date_pointer.strftime("%Y-%m-%d")
     date_current_day = date_pointer.strftime("%d")
-    date_current_day_sfx = suffix.main(test, hints_enabled, date_current_day) # (str)
+    date_current_day_sfx = suffix.main(test, hints_enabled, str(int(date_current_day))) # (str)
     date_dow = date_pointer.strftime("%A")
     date_current_month_int = date_pointer.strftime("%m")
     date_current_month_str = date_pointer.strftime("%B")
@@ -71,7 +71,7 @@ def main_simp(test: bool, hints_enabled: bool, date_pointer: datetime) -> tuple[
             1) date_current_day_sfx (str): (DD) with suffix, e.g. 27th.
     """
     hints_enabled and print(f"\nHINT {__name__}: Datetime received: {date_pointer}")
-    suffix_str = suffix.main(test, hints_enabled, date_pointer.strftime("%d"))
+    suffix_str = suffix.main(test, hints_enabled, str(int(date_pointer.strftime("%d"))))
     rtn_tuple = (date_pointer, suffix_str)
     hints_enabled and print(f"HINT {__name__}: Returning SIMPLE datetime tuple {checkmark}\n")
     return rtn_tuple
