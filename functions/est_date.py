@@ -1,3 +1,7 @@
+import sys
+
+sys.path.append("..")
+
 import time
 from datetime import datetime
 
@@ -39,7 +43,7 @@ def get_now(test: bool, hints_enabled: bool) -> tuple[str, str, str, str, str, s
         """
         mod_day = date_day
         if int(date_day) < 1 or int(date_day) > 31:
-            print("invalid day entered.")
+            hints_enabled and print("invalid day entered.")
             pass # possible change return value
         else:
             if date_day[-1] == "1":
