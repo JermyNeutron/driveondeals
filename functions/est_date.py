@@ -46,7 +46,9 @@ def get_now(test: bool, hints_enabled: bool) -> tuple[str, str, str, str, str, s
             hints_enabled and print("invalid day entered.")
             pass # possible change return value
         else:
-            if date_day[-1] == "1":
+            if date_day == "12":
+                mod_day += "th"
+            elif date_day[-1] == "1":
                 mod_day += "st"
             elif date_day[-1] == "2":
                 mod_day += "nd"
