@@ -109,21 +109,21 @@ def test_basic_search(test: bool, hints_enabled: bool, ss_enabled: bool, instanc
     try:
         separator = page.locator('li[role="separator"]')
         hints_enabled and print(f"HINT {__name__}: Step 11 (result): {find_time()}: Separator found: {separator}")
-        next_option = separator.locator('xpath=following-sibling::li[@aria-disabled="false"][1]')
-        hints_enabled and print(f"HINT {__name__}: Step 11 (result): {find_time()}: Next option found: {next_option}")
+        next_option_pu = separator.locator('xpath=following-sibling::li[@aria-disabled="false"][1]')
+        hints_enabled and print(f"HINT {__name__}: Step 11 (result): {find_time()}: Next option found: {next_option_pu}")
     except Exception as e:
         print(f"HINT {__name__}: Step 11 (result) {find_time()}: Could not find separator: {e}")
 
     # 12:
     try:
         hints_enabled and print(f"HINT {__name__}: Step 12: {find_time()}: Expecting next_option available time to be visible ...", end=" ")
-        new_next_option = next_option.first # resolves strict mode error (2 occurences)
+        next_option_time = next_option_pu.first # resolves strict mode error (2 occurences)
         hints_enabled and print(f"VISIBLE {checkmark}")
 
         # Time Click
-        hints_enabled and print(f"HINT {__name__}: Next option is VISIBLE: {next_option} ...", end=" ")
-        expect(new_next_option).to_be_visible()
-        new_next_option.click()
+        hints_enabled and print(f"HINT {__name__}: Next option is VISIBLE: {next_option_pu} ...", end=" ")
+        expect(next_option_time).to_be_visible()
+        next_option_time.click()
         hints_enabled and print(f"and clicked {checkmark}")
     except Exception as e:
         print(f"HINT {__name__}: Step 12: {find_time()}: Next available time unable to be selected: {e}")
@@ -132,15 +132,15 @@ def test_basic_search(test: bool, hints_enabled: bool, ss_enabled: bool, instanc
     # 13. Default Return Date Search
     # Aria-label format: "Choose Saturday, October 12th, 2024"
     # Hypothesis: easy copy/paste of pick-up date
-    hints_enabled and print(f"HINT {__name__}: Step 13: {find_time()}: Assigning Next Date As Pick Up ...")
+    hints_enabled and print(f"HINT {__name__}: Step 13: {find_time()}: # Assigning Next Date As Pick Up ...")
     next_day_meta = dx1rtn.main_simp(test, hints_enabled, meta_krono[0])
-    aria_label_do = f"Choose {next_day_meta[0].strftime('%A')}, {next_day_meta[0].strftime('%B')} {next_day_meta[1]}, {next_day_meta[0].strftime('%Y')}"
-    next_date_to_select = page.locator(f'div[role="button"][aria-label="{aria_label_do}"]')
+    aria_label_do_date = f"Choose {next_day_meta[0].strftime('%A')}, {next_day_meta[0].strftime('%B')} {next_day_meta[1]}, {next_day_meta[0].strftime('%Y')}"
+    next_date_to_select = page.locator(f'div[role="button"][aria-label="{aria_label_do_date}"]')
     hints_enabled and print(f"HINT {__name__}: Step 13 (result): {find_time()}: aria-label assigned {next_date_to_select} {checkmark}")
     
     # 14: Check Date Visibility
     try:
-        hints_enabled and print(f"HINT {__name__}: Step 14: {find_time()}: Next Date Visibility is ...", end=" ")
+        hints_enabled and print(f"HINT {__name__}: Step 14: {find_time()}: # Next Date Visibility is ...", end=" ")
         expect(next_date_to_select).to_be_visible()
         hints_enabled and print(f"VISIBLE {checkmark}")
     except:
@@ -151,31 +151,42 @@ def test_basic_search(test: bool, hints_enabled: bool, ss_enabled: bool, instanc
 
     # 15: Date Click
     try:
-        hints_enabled and print(f"HINT {__name__}: Step 14: {find_time()}: Date Click ...", end=" ")
+        hints_enabled and print(f"HINT {__name__}: Step 15: {find_time()}: # Date Click ...", end=" ")
         next_date_to_select.click()
         hints_enabled and print(f"{checkmark}")
     except Exception as e:
         print(f"HINT {__name__}: Step 15: {find_time()}: Unable to click drop off date: {e}")
 
 
+    # 16. Return Next Available Time Search, trying to keep same return time as pick up
+    hints_enabled and print(f"HINT {__name__}: Step 16: {find_time()}: Expecting same time for drop off", end=" ... ")
+    aria_label_do_time = next_option_time.get_attribute('data-value')
+    next_option_du = f"returnTime_{aria_label_do_time}"
+    date_to_select = page.locator(f'li[role="option"][id="{next_option_du}"]')
+    # time should be visible
+    expect(date_to_select).to_be_visible()
+    date_to_select.click()
+    hints_enabled and print(f'clicked! {checkmark}')
+
+
     """
     STEPS Remaining*
-    # 16. Return Next Available Time Search
-    # 17. Return Next Available Time Click
+    # 17. VARIABLE is driver 25+
+    # 18 click on GO
     """
 
     
     # Screenshot
     if ss_enabled:
         page.wait_for_timeout(param_timeout_2)
-        hints_enabled and print(f"HINT {__name__}: Step 13: {find_time()}: # Screenshot ...", end=" ")
+        hints_enabled and print(f"HINT {__name__}: Step 17: {find_time()}: # Screenshot ...", end=" ")
         file_utils.verify_folder_path(folder_path)
         screenshot_path = file_utils.get_unique_filename(screenshot_base, folder_path)
 
         page.screenshot(path=screenshot_path)
         hints_enabled and print(f"taken and stored at {screenshot_path}. {checkmark}")
     else:
-        hints_enabled and print(f"HINT {__name__}: Step 13: {find_time()}: # Screenshot disabled per {{ss_enabled}} {xmark}")
+        hints_enabled and print(f"HINT {__name__}: Step 17: {find_time()}: # Screenshot disabled per {{ss_enabled}} {xmark}")
 
 
 if __name__ == "__main__":
