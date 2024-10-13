@@ -8,19 +8,24 @@ sys.path.append(".")
 from functions import suffix
 
 
-# Standard current time retrieval
-def get_now(test: bool, hints_enabled: bool) -> tuple[str, str, str, str, str, str, str]:
+# Custom texts
+checkmark = "\u2713"
+xmark = "\u2715"
+
+
+def main(test: bool, hints_enabled: bool, date_pointer: datetime) -> tuple[datetime, str]:
     """
-    Automatically retrieves the current date and time.
+    Returns datetime object with easy referencing.
 
     Args:
         test (bool)
         hints_enabled (bool)
+        date_pointer (datetime)
 
     Returns:
         tuple: a tuple containing:
-            0) meta_krono (tup): Everything retrieved from datetime.now()
-            1) current_time (str): The current time in format HH:MM:SS, e.g. "07:25:40".
+            0) date_pointer (datetime): Returning original datetime object.
+            1) time_current (str): The current time in format HH:MM:SS, e.g. "07:25:40".
             2) date_current (str): The current date (YYYY-MM-DD).
             3) date_current_day (str): The current day (DD).
             4) date_current_day_sfx (str): (DD) with suffix, e.g. 27th.
@@ -29,25 +34,16 @@ def get_now(test: bool, hints_enabled: bool) -> tuple[str, str, str, str, str, s
             7) date_current_month_str (str): The current month, e.g. September.
             8) date_current_year (str): The current year (YYYY).
     """
-        
-
-    def minimum_date_selection(test: bool, hints_enabled: bool) -> str:
-        date_current = time.strftime("")
-        # possible function to restrict backward reseverations
-        pass
-    
-    # POSSIBLE condense .strftime()'s to minimize tuple
-    meta_krono = datetime.now()
-    time_current = meta_krono.strftime("%H:%M:%S")
-    date_current = meta_krono.strftime("%Y-%m-%d")
-    date_current_day = meta_krono.strftime("%d")
+    time_current = date_pointer.strftime("%H:%M:%S")
+    date_current = date_pointer.strftime("%Y-%m-%d")
+    date_current_day = date_pointer.strftime("%d")
     date_current_day_sfx = suffix.main(test, hints_enabled, date_current_day) # (str)
-    date_dow = meta_krono.strftime("%A")
-    date_current_month_int = meta_krono.strftime("%m")
-    date_current_month_str = meta_krono.strftime("%B")
-    date_current_year = meta_krono.strftime("%Y")
+    date_dow = date_pointer.strftime("%A")
+    date_current_month_int = date_pointer.strftime("%m")
+    date_current_month_str = date_pointer.strftime("%B")
+    date_current_year = date_pointer.strftime("%Y")
     if hints_enabled:
-        print(f"\nHINT {__name__}: {{meta_krono}}: {meta_krono}")
+        print(f"HINT {__name__}: Received and returning {{date_pointer}}: {date_pointer}")
         print(f"HINT {__name__}: {{time_current}}: {time_current}")
         print(f"HINT {__name__}: {{date_current}}: {date_current}")
         print(f"HINT {__name__}: {{date_current_day}}: {date_current_day}")
@@ -56,38 +52,34 @@ def get_now(test: bool, hints_enabled: bool) -> tuple[str, str, str, str, str, s
         print(f"HINT {__name__}: {{date_current_month_int}}: {date_current_month_int}")
         print(f"HINT {__name__}: {{date_current_month_str}}: {date_current_month_str}")
         print(f"HINT {__name__}: {{date_current_year}}: {date_current_year}\n")
-    return meta_krono, time_current, date_current, date_current_day, date_current_day_sfx, date_dow, date_current_month_int, date_current_month_str, date_current_year
+    rtn_tuple = (date_pointer, time_current, date_current, date_current_day, date_current_day_sfx, date_dow, date_current_month_int, date_current_month_str, date_current_year)
+    return rtn_tuple
 
 
-# TESTS
-def test_get_now(test: bool, hints_enabled: bool):
+def main_simp(test: bool, hints_enabled: bool, date_pointer: datetime) -> tuple[datetime, str]:
     """
-    Test function to print return tuple.
-
-    Automatically retrieves the current date and time.
+    Returns datetime object with suffix ONLY.
 
     Args:
         test (bool)
         hints_enabled (bool)
+        date_pointer (datetime)
 
     Returns:
         tuple: a tuple containing:
-            0) current_time (str): The current time in format HH:MM:SS, e.g. "07:25:40".
-            1) date_current (str): The current date (YYYY-MM-DD).
-            2) date_current_day (str): The current day (DD).
-            3) date_current_day_sfx (str): (DD) with suffix, e.g. 27th.
-            4) date_dow (str): "Day of Week", e.g. Tuesday.
-            5) date_current_month_ind (str): The current month (MM).
-            6) date_current_month_str (str): The current month, e.g. September.
-            7) date_current_year (str): The current year (YYYY).
+            0) date_pointer (datetime): Returning original datetime object.
+            1) date_current_day_sfx (str): (DD) with suffix, e.g. 27th.
     """
-    meta_date_today = get_now(test, hints_enabled)
-    for i, value in enumerate(meta_date_today, start=0):
-        print(f"HINT {test_get_now}:", i, value)
+    hints_enabled and print(f"\nHINT {__name__}: Datetime received: {date_pointer}")
+    suffix_str = suffix.main(test, hints_enabled, date_pointer.strftime("%d"))
+    rtn_tuple = (date_pointer, suffix_str)
+    hints_enabled and print(f"HINT {__name__}: Returning SIMPLE datetime tuple {checkmark}\n")
+    return rtn_tuple
 
 
 if __name__ == "__main__":
     test = True
     hints_enabled = True
     
-    get_now(test, hints_enabled)
+    date_pointer = datetime.now()
+    main(test, hints_enabled, date_pointer)
