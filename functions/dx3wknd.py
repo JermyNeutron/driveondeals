@@ -3,132 +3,99 @@
 import sys
 sys.path.append(".")
 
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from functions import est_date
 
 
 # TEST
-def test_meta(test, hints_enabled):
+def test_meta_dt(test: bool, hints_enabled: bool) -> datetime:
+    # return datetime.now()
+    return datetime.fromisoformat("2024-12-28")
+
+
+
+def test_meta_tup(test: bool, hints_enabled: bool) -> tuple:
     return est_date.get_now(test, hints_enabled)
 
 
 # test time difference between calling other function and calling datetime.now() internally
-def main(test: bool, hints_enabled: bool, current_date: str) -> tuple[str, str]:
+def main(test: bool, hints_enabled: bool, date_pointer: datetime) -> tuple[tuple, tuple]:
     """
-    Automatically determines upcoming 3 day weekend dates (YYYY-MM-DD).
+    Calculates upcomining Friday and returns weekends' DEFAULT datetime tuples.
 
     Args:
         test (bool)
         hints_enabled (bool)
-        current_date (str)
+        date_pointer (timedelta)
 
     Returns:
-        tuple: a tuple containing:
-            0) start date (YYYY-MM-DD)
-            1) end date (YYYY-MM-DD)
-
-    Indices:
-        0-3: YEAR
-        5-6: MONTH
-        8-9: DAY
+        dx3wknd_start DEFAULT (tuple)
+        dx3wknd_start DEFAULT (tuple)
     """
-    print(current_date)
-    year = int(current_date[0:4])
-    month = int(current_date[5:7])
-    day = int(current_date[8:10])
-    
 
-    current_day_str = date(year, month, day).strftime("%A")
-    hints_enabled and print(date(year, month, day))
-    current_day_no = day
-    if current_day_str != "Friday":
-        date_point = current_day_str
-        temp_year = year
-        while date_point != "Friday":
-            try:
-                hints_enabled and print(temp_year, month, current_day_no)
-                current_day_no += 1
-                current_temp_str = date(temp_year, month, current_day_no).strftime("%A")
-                hints_enabled and print(f"current_temp_str: {current_temp_str}, {current_day_no}")
-                date_point = current_temp_str
-            except ValueError as e:
-                if (month + 1) % 13:
-                    hints_enabled and print(f"HINT: Month advanced. Error handled for: {e}")
-                    month += 1
-                    current_day_no = 0
-                else:
-                    hints_enabled and print(f"HINT: Year advanced. Error handled for: {e}")
-                    temp_year += 1
-                    month = 1
-                    current_day_no = 0
-        dx3wknd_start = date(temp_year, month, current_day_no)
-        dx3wknd_end = date(temp_year, month, current_day_no + 3)
-        if hints_enabled:
-            print(f"Starting Friday: {dx3wknd_start}")
-            print(f"Ending Monday: {dx3wknd_end}")
-        return dx3wknd_start, dx3wknd_end
 
-def main_b(test: bool, hints_enabled: bool) -> tuple[str, str]:
+    # find starting Friday
+    def find_start(test: bool, hints_enabled: bool, date_pointer: timedelta) -> tuple:
+        hints_enabled and print(date_pointer.strftime("%A"))
+        if date_pointer.strftime("%A") != "Friday":
+            tgt_date = date_pointer
+            while tgt_date.strftime("%A") != "Friday":
+                tgt_date += timedelta(days=1)
+            date_pointer = tgt_date
+        print(f"HINT {__name__}: The nearest Friday is: {date_pointer}")
+
+
+    dx3wknd_start = find_start(test, hints_enabled, date_pointer)
+
+
+def main_simp(test: bool, hints_enabled: bool, date_pointer: datetime) -> tuple[tuple, tuple]:
     """
-    Redudant function to test time delta when referencing vs. calling datetime.
-
-    Automatically determines upcoming 3 day weekend dates (YYYY-MM-DD).
+    Calculates upcomining Friday and returns weekends' SIMPLE datetime tuples.
 
     Args:
         test (bool)
         hints_enabled (bool)
+        date_pointer (timedelta)
 
     Returns:
-        tuple: a tuple containing:
-            0) start date (YYYY-MM-DD)
-            1) end date (YYYY-MM-DD)
-
-    Indices:
-        0-3: YEAR
-        5-6: MONTH
-        8-9: DAY
+        dx3wknd_start SIMPLE (tuple)
+        dx3wknd_start SIMPLE (tuple)
     """
-    current_date = est_date.get_now(test, hints_enabled)
-    year = int(current_date[1][0:4])
-    month = 12 # int(current_date[5:7])
-    day = 28 # int(current_date[8:10])
-    
+    rtn_tuple = []
 
-# currently needs rework as it doesn't lapse into the new year
-    current_day_str = date(year, month, day).strftime("%A")
-    hints_enabled and print(date(year, month, day))
-    current_day_no = day
-    if current_day_str != "Friday":
-        date_point = current_day_str
-        temp_year = year
-        while date_point != "Friday":
-            try:
-                hints_enabled and print(temp_year, month, current_day_no)
-                current_day_no += 1
-                current_temp_str = date(temp_year, month, current_day_no).strftime("%A")
-                hints_enabled and print(f"current_temp_str: {current_temp_str}, {current_day_no}")
-                date_point = current_temp_str
-            except ValueError as e:
-                if (month + 1) % 13:
-                    hints_enabled and print(f"HINT: Month advanced. Error handled for: {e}")
-                    month += 1
-                    current_day_no = 0
-                else:
-                    hints_enabled and print(f"HINT: Year advanced. Error handled for: {e}")
-                    temp_year += 1
-                    month = 1
-                    current_day_no = 0
-        dx3wknd_start = date(temp_year, month, current_day_no)
-        dx3wknd_end = date(temp_year, month, current_day_no + 3)
-        if hints_enabled:
-            print(f"Starting Friday: {dx3wknd_start}")
-            print(f"Ending Monday: {dx3wknd_end}")
-        return dx3wknd_start, dx3wknd_end
+
+    def find_start(test: bool, hints_enabled: bool, date_pointer: timedelta) -> datetime:
+        date_start = date_pointer
+        if date_start.strftime("%A") != "Friday":
+            tgt_date = date_start
+            while tgt_date.strftime("%A") != "Friday":
+                tgt_date += timedelta(days=1)
+            date_start = tgt_date
+        print(f"HINT {__name__}: The nearest Friday is: {date_start}")
+        return date_start
+
+
+    dx3wknd_start_datetime = find_start(test, hints_enabled, date_pointer)
+    dx3wknd_start = est_date.main_simp(test, hints_enabled, dx3wknd_start_datetime)
+    rtn_tuple.append(dx3wknd_start)
+
+
+    def find_end(test: bool, hints_enabled: bool, dx3wknd_start_datetime: timedelta) -> datetime:
+        date_return = dx3wknd_start_datetime + timedelta(days=3)
+        return date_return
+
+        
+    dx3wknd_end_datetime = find_end(test, hints_enabled, dx3wknd_start_datetime)
+    dx3wknd_end = est_date.main_simp(test, hints_enabled, dx3wknd_end_datetime)
+    rtn_tuple.append(dx3wknd_end)
+
+    print(rtn_tuple)
+    return tuple(rtn_tuple)
 
 
 if __name__ == "__main__":
     test = True
     hints_enabled = True
-    meta_date = test_meta(test, hints_enabled)
+    meta_date = datetime.now()
 
-    main(True, True, meta_date[2])
+    main_simp(test, hints_enabled, meta_date)
