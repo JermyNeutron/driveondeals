@@ -1,6 +1,9 @@
 import re
 import time
 
+import sys
+sys.path.append(".")
+
 from playwright.sync_api import Page, expect, sync_playwright
 from functions import file_utils
 
@@ -30,54 +33,54 @@ def test_basic_search(test: bool, hints_enabled: bool, get_now_aria_label: str, 
     checkmark = "\u2713"
 
 
-    # Go To Webpage
+    # 1: Go To Webpage
     hints_enabled and print(f"HINT {test_basic_search}: Step 1: {find_time()}: # Go To Webpage", end=" ", flush=True)
     page.goto("https://www.alamo.com/en/reserve.html#/start")
     hints_enabled and print(f"{checkmark}", flush=True)
 
-    # Verify Webpage
+    # 2: Verify Webpage
     hints_enabled and print(f"HINT {test_basic_search}: Step 2: {find_time()}: # Verify Webpage", end=" ", flush=True)
     expect(page).to_have_title(re.compile("Alamo Rent a Car"))
     hints_enabled and print(f"{checkmark}", flush=True)
     
-    # Load Webpage
+    # 3: Load Webpage
     hints_enabled and print(f"HINT {test_basic_search}: Step 3: {find_time()}: # Load Webpage", end=" ", flush=True)
     page.wait_for_load_state("load")
     hints_enabled and print(f"{checkmark}", flush=True)
     
 
     # VARIABLE: Location Search
-    # Enter Pick Up Location
+    # 4: Enter Pick Up Location
     hints_enabled and print(f"HINT {test_basic_search}: Step 4: {find_time()}: # Enter Pick Up Location", end=" ", flush=True)
     page.locator("#pickupLocation").fill(test_pu_location)
     hints_enabled and print(f"{checkmark}", flush=True)
 
     # VARIABLE: Location Selection
-    # Select First Populated Option
+    # 5: Select First Populated Option
     hints_enabled and print(f"HINT {test_basic_search}: Step 5: {find_time()}: # Select First Populated Option: {test_pu_location} ...", end=" ", flush=True) # VARIABLE: variable needs to change to reflect actual use case entry
     page.wait_for_selector("role=option")
     page.get_by_role("option").first.click()
     hints_enabled and print(f"selected {test_pu_location} {checkmark}", flush=True) # VARIABLE: variable needs to change to reflect actual use case
 
 
-    # Close Pop Up
+    # 6: Close Pop Up
     hints_enabled and print(f"HINT {test_basic_search}: Step 6: {find_time()}: # Close Pop Up", end=" ", flush=True)
     page.get_by_role("button", name="Close").click()
     hints_enabled and print(f"{checkmark}", flush=True)
 
-    # Necessary Timeout; Waits for pop up closure completion
+    # 7: Necessary Timeout; Waits for pop up closure completion
     hints_enabled and print(f"HINT {test_basic_search}: Step 7: {find_time()}: # Necessary Timeout ...", end=" ", flush=True)
     page.wait_for_timeout(param_timeout_1)
     hints_enabled and print(f"{param_timeout_1/1000} second(s) elapsed... {checkmark}", flush=True)
 
 
     # VARIABLE: Date
-    # Assign Current Date As Pick Up
+    # 8: Assign Current Date As Pick Up
     hints_enabled and print(f"HINT {test_basic_search}: Step 8: {find_time()}: # Assign Current Date As Pick Up", end=" ", flush=True)
     date_to_select = page.locator(f'div[role="button"][aria-label="{get_now_aria_label}"]')
     hints_enabled and print(f"{checkmark}\nHINT {test_basic_search}: Step 8 (result): aria-label assigned {date_to_select} {checkmark}", flush=True)
 
-    # Check Date Visibility
+    # 9: Check Date Visibility
     try:
         hints_enabled and print(f"HINT {test_basic_search}: Step 9: {find_time()}: # Date Visibility is ...", end=" ", flush=True)
         expect(date_to_select).to_be_visible()
@@ -88,12 +91,13 @@ def test_basic_search(test: bool, hints_enabled: bool, get_now_aria_label: str, 
         expect(date_to_select).to_be_visible()
         hints_enabled and print(f"{checkmark}", flush=True)
 
-    # Date Click
+    # 10: Date Click
     hints_enabled and print(f"HINT {test_basic_search}: Step 10: {find_time()}: Date Click ...", end=" ", flush=True)
     date_to_select.click()
     hints_enabled and print(f"{checkmark}", flush=True)
 
 
+    # 11:
     # VARIABLE: Time Selection
     hints_enabled and print(f"HINT {test_basic_search}: Step 11: {find_time()}: # Time Selection... ", flush=True)
     try:
@@ -105,9 +109,10 @@ def test_basic_search(test: bool, hints_enabled: bool, get_now_aria_label: str, 
         print(f"HINT {test_basic_search}: Step 11 (result) {find_time()}: Could not find separator: {e}", flush=True)
 
     try:
+    # 12:
         hints_enabled and print(f"HINT {test_basic_search}: Step 12 {find_time()}: Expecting next_option available time to be visible ...", end=" ", flush=True)
         new_next_option = next_option.first # resolves strict mode error (2 occurences)
-        hints_enabled and print(f"{checkmark}", flush=True)
+        hints_enabled and print(f"VISIBLE {checkmark}", flush=True)
 
         # Time Click
         hints_enabled and print(f"HINT {test_basic_search}: Next option is VISIBLE: {next_option} ...", end=" ", flush=True)
@@ -132,7 +137,7 @@ def test_basic_search(test: bool, hints_enabled: bool, get_now_aria_label: str, 
     # Screenshot
     page.wait_for_timeout(param_timeout_2)
     # screenshot_path = f"test/screenshots/{current_date}_test.png"
-    hints_enabled and print(f"HINT {test_basic_search}: Step 11: {find_time()}: # Screenshot ...", end=" ", flush=True)
+    hints_enabled and print(f"HINT {test_basic_search}: Step 13: {find_time()}: # Screenshot ...", end=" ", flush=True)
     file_utils.verify_folder_path(folder_path)
     screenshot_path = file_utils.get_unique_filename(screenshot_base, folder_path)
 
