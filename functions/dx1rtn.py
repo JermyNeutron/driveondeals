@@ -35,8 +35,8 @@ def main(test: bool, hints_enabled: bool, date_pointer: datetime = "DEFAULT") ->
     """
     if date_pointer == "DEFAULT":
         date_pointer = datetime.fromisoformat("2024-10-12 19:18:16.708059")
-        hints_enabled and print(f"\nHINT {__name__}: Function defaulted to ambiguous datetime object!!!", end="", flush=True)
-    hints_enabled and print(f"\nHINT {__name__}: Receiving date_pointer as {date_pointer}", flush=True)
+        hints_enabled and print(f"HINT {__name__}: Function defaulted to ambiguous datetime object!!!", end="")
+    hints_enabled and print(f"HINT {__name__}: Receiving date_pointer as {date_pointer}")
     
     rtn_tuple = []
     next_day_datetime = date_pointer + timedelta(days=1)
@@ -58,7 +58,7 @@ def main(test: bool, hints_enabled: bool, date_pointer: datetime = "DEFAULT") ->
     date_current_year = next_day_datetime.strftime("%Y")
     rtn_tuple.append(date_current_year)
 
-    hints_enabled and print(f"HINT {__name__}: Returning newly created DEFAULT datetime tuple for NEXT day: {next_day_datetime} {checkmark}\n", flush=True)
+    hints_enabled and print(f"HINT {__name__}: Returning newly created DEFAULT datetime tuple for NEXT day: {next_day_datetime} {checkmark}")
     return tuple(rtn_tuple)
 
 
@@ -78,14 +78,14 @@ def main_simp(test: bool, hints_enabled: bool, date_pointer: datetime = "DEFAULT
     """
     if date_pointer == "DEFAULT":
         date_pointer = datetime.fromisoformat("2024-10-12 19:18:16.708059")
-    hints_enabled and print(f"\nHINT {__name__}: Function defaulted to ambiguous datetime object!!!", flush=True)
+        hints_enabled and print(f"HINT {__name__}: Function defaulted to ambiguous datetime object!!!")
     rtn_tuple = []
     next_day_datetime = date_pointer + timedelta(days=1)
     rtn_tuple.append(next_day_datetime)
     next_day_suffix = suffix.main(test, hints_enabled, next_day_datetime.strftime("%d"))
     rtn_tuple.append(next_day_suffix)
     
-    hints_enabled and print(f"HINT {__name__}: Returning newly created SIMPLE datetime tuple for NEXT day: {next_day_datetime} {checkmark}\n", flush=True)
+    hints_enabled and print(f"HINT {__name__}: Returning newly created SIMPLE datetime tuple for NEXT day: {next_day_datetime} {checkmark}")
     return tuple(rtn_tuple)
 
 
