@@ -17,7 +17,7 @@ def main(test: bool, hints_enabled: bool, date_day: str) -> str:
         hints_enabled and print("invalid day entered.")
         pass # possible change return value
     else:
-        if date_day == "12":
+        if date_day in ("11", "12", "13"):
             mod_day += "th"
         elif date_day[-1] == "1":
             mod_day += "st"
@@ -33,6 +33,6 @@ def main(test: bool, hints_enabled: bool, date_day: str) -> str:
 if __name__ == "__main__":
     test = True
     hints_enabled = True
-    date_day = "15"
+    date_day = "31"
     
     main(test, hints_enabled, date_day)
