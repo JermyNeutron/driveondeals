@@ -1,5 +1,6 @@
 # Determines suffix for day given.
 
+
 def main(test: bool, hints_enabled: bool, date_day: str) -> str:
     """
     Determines proper suffix for day argued.
@@ -27,9 +28,10 @@ def main(test: bool, hints_enabled: bool, date_day: str) -> str:
             mod_day += "rd"
         else:
             mod_day += "th"
-        hints_enabled and print(f"HINT {__name__}: {date_day} returned as {mod_day}\n")
+        hints_enabled and print(f"HINT {__name__}: {date_day} returned as {mod_day}")
         return mod_day
         
+
 if __name__ == "__main__":
     test = True
     hints_enabled = True
