@@ -4,7 +4,7 @@ import sys
 sys.path.append(".")
 
 from datetime import datetime, date, timedelta
-from functions import est_date
+from functions_gen import est_date
 
 
 # Custom texts

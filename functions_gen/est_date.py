@@ -5,7 +5,7 @@ import sys
 
 sys.path.append(".")
 
-from functions import suffix
+from functions_gen import suffix
 
 
 # Custom texts

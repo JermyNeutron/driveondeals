@@ -4,7 +4,7 @@ sys.path.append(".")
 
 from datetime import datetime, date, timedelta
 
-from functions import suffix
+from functions_gen import suffix
 
 
 # Custom texts

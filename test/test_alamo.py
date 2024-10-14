@@ -7,7 +7,7 @@ sys.path.append(".")
 
 from playwright.sync_api import Page, expect, sync_playwright
 
-from functions import file_utils, est_date, suffix, dx1rtn, dx3wknd
+from functions_gen import file_utils, est_date, suffix, dx1rtn, dx3wknd
 
 def find_time():
     current_time = time.strftime("%H:%M:%S")
