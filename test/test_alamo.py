@@ -28,7 +28,8 @@ def test_basic_search(test: bool, hints_enabled: bool, ss_enabled: bool, instanc
     # PARAMETERS
     meta_krono = est_date.main_simp(test, hints_enabled, instance_timestamp)
     param_timeout_1 = 1000 # VERIFIED timeout for initial pop-up
-    param_timeout_2 = 1000 # Timeout preceding browser screenshot, stored test/screenshots
+    param_timeout_ss = 1000 # Timeout preceding browser screenshot, stored test/screenshots
+    param_timeout_2 = 1000 # Timeout succeeding reservation start
     test_pu_location = "SNA"
     file_date = meta_krono[0].strftime("%Y%m%d")
     screenshot_base = f"{file_date}_test"
@@ -140,45 +141,60 @@ def test_basic_search(test: bool, hints_enabled: bool, ss_enabled: bool, instanc
     
     # 14: Check Date Visibility
     try:
-        hints_enabled and print(f"HINT {__name__}: Step 14: {find_time()}: # Next Date Visibility is ...", end=" ")
+        hints_enabled and print(f"HINT {__name__}: Step 14: {find_time()}: # Drop Off Date Visibility is", end=" ... ")
         expect(next_date_to_select).to_be_visible()
         hints_enabled and print(f"VISIBLE {checkmark}")
     except:
-        hints_enabled and print(f"NOT visible. Executing drop off date box click ...", end=" ")
+        hints_enabled and print(f"NOT visible. Executing Drop Off Date box click", end=" ... ")
         page.get_by_role("button", name="Return Date required").click()
         expect(next_date_to_select).to_be_visible()
         hints_enabled and print(f"{checkmark}")
 
     # 15: Date Click
     try:
-        hints_enabled and print(f"HINT {__name__}: Step 15: {find_time()}: # Date Click ...", end=" ")
+        hints_enabled and print(f"HINT {__name__}: Step 15: {find_time()}: # Drop Off Date selected", end=" ... ")
         next_date_to_select.click()
         hints_enabled and print(f"{checkmark}")
     except Exception as e:
-        print(f"HINT {__name__}: Step 15: {find_time()}: Unable to click drop off date: {e}")
+        print(f"HINT {__name__}: Step 15: {find_time()}: Unable to click Drop Off Date: {e}")
 
 
-    # 16. Return Next Available Time Search, trying to keep same return time as pick up
-    hints_enabled and print(f"HINT {__name__}: Step 16: {find_time()}: Expecting same time for drop off", end=" ... ")
+    # 16: Return Next Available Time Search, trying to keep same return time as pick up
+    hints_enabled and print(f"HINT {__name__}: Step 16: {find_time()}: Drop Off Time Visibility is", end=" ... ")
     aria_label_do_time = next_option_time.get_attribute('data-value')
     next_option_du = f"returnTime_{aria_label_do_time}"
     date_to_select = page.locator(f'li[role="option"][id="{next_option_du}"]')
-    # time should be visible
     expect(date_to_select).to_be_visible()
+    hints_enabled and print(f"VISIBLE {checkmark}")
+
+    # 17: Time Click
+    hints_enabled and print(f"HINT {__name__}: Step 17: {find_time()}: # Drop Off Time selected", end=" ... ")
     date_to_select.click()
     hints_enabled and print(f'clicked! {checkmark}')
 
 
+    # 18. VARIABLE is driver 25+
+    hints_enabled and print(f"HINT {__name__}: Step 18: {find_time()}: Driver Age need's verification!!! BYPASSED")
+    
+    # 19 click on GO
+    hints_enabled and print(f"HINT {__name__}: Step 19: {find_time()}: Reservation started", end=" ... ")
+    go_button = page.locator(f'button[class="button button-go"][type="submit"][aria-label="Go"]')
+    expect(go_button).to_be_visible()
+    hints_enabled and print("READY", end=" ... ")
+    go_button.click()
+    hints_enabled and print(f"CLICKED {checkmark}")
+    page.wait_for_timeout(param_timeout_2)
+
+    
     """
     STEPS Remaining*
-    # 17. VARIABLE is driver 25+
-    # 18 click on GO
+
     """
 
     
     # Screenshot
     if ss_enabled:
-        page.wait_for_timeout(param_timeout_2)
+        page.wait_for_timeout(param_timeout_ss)
         hints_enabled and print(f"HINT {__name__}: Step 17: {find_time()}: # Screenshot ...", end=" ")
         file_utils.verify_folder_path(folder_path)
         screenshot_path = file_utils.get_unique_filename(screenshot_base, folder_path)
