@@ -1,0 +1,67 @@
+# Alamo Rent-A-Car
+
+# Car Selection Identifications
+
+(possible anomaly for attribute to use hyphens and underscores!)
+## Cars
+- Compact [data-dtm-track="car_class|pay_later|CCAR"]
+- Compact Convertible
+- Compact Special
+- Economy [data-dtm-track="car_class|pay_later|ECAR"]
+- Full Size Hybrid
+- Full Size [data-dtm-track="car_class|pay_later|FCAR"]
+- Full Size Elite Electric
+- Full Size Elite [data-dtm-track="car_class|pay_later|GXAR"]
+- Intermediate Electric
+- Midsize [data-dtm-track="car_class|pay_later|ICAR"]
+- Midsize Convertible
+- Luxury [data-dtm-track="car_class|pay_later|LCAR"]
+- Luxury Sport
+- Luxury Convertible
+- Premium [data-dtm-track="car_class|pay_later|PCAR"] # Nissan Maxima or similar
+- Premium [data-dtm-track="car_class|pay_later|PDAR"] # Chrysler 300 or similar
+- American Muscle Car
+- Premium Special [data-dtm-track="car_class|pay_later|PXAR"]
+- Standard Elite [data-dtm-track="car_class|pay_later|RXAR"]
+- Standard Hybrid
+- Standard [data-dtm-track="car_class|pay_later|SCAR"]
+- Sporty Car
+- Convertible [data-dtm-track="car_class|pay_later|STAR"]
+- Corvette
+- Midsize Luxury Sedan
+- Midsize Sport Luxudry Sedan
+- Electric luxury Sedan
+- Full Size luxury Sedan
+- Performance Sport
+- Luxury Performance Sport
+- Premium Luxury Sedan
+- Ultra Performance Sport
+- Elite Performance Sport
+- Ultra Luxury Sedan
+
+## SUVs
+- Compact SUV [data-dtm-track="car_class|pay_later|CFAR"]
+- Midsize SUV [data-dtm-track="car_class|pay_later|IFAR"]
+- Jeep [data-dtm-track="car_class|pay_later|IJAR"]
+- Jeep Wrangler 4 door [data-dtm-track="car_class|pay_later|FJAR"]
+- Standard SUV [data-dtm-track="car_class|pay_later|SFAR"]
+- Standard Elite SUV [data-dtm-track="car_class|pay_later|RFAR"]
+- Premium Elite SUV [data-dtm-track="car_class|pay_later|UFAR"]
+- Premium Crossover [data-dtm-track="car_class|pay_later|PGAR"]
+- Full Size SUV [data-dtm-track="car_class|pay_later|FFAR"]
+- Luxury SUV [data-dtm-track="car_class|pay_later|LFAR"]
+- Premium SUV [data-dtm-track="car_class|pay_later|PFAR"]
+- Midsize Luxury SUV [data-dtm-track="car_class|pay_later|UDAR"]
+- Midsize Elite Luxury SUV [data-dtm-track="car_class|pay_later|WDAR"]
+
+## Trucks
+- Pickup [data-dtm-track="car_class|pay_later|PPAR"]
+- Standard Pickup [data-dtm-track="car_class|pay_later|SPAR"]
+
+## Vans
+- 7 Passenger Minivan [data-dtm-track="car_class|pay_later|MVAR"]
+- 8 Passenger Minivan [data-dtm-track="car_class|pay_later|SVAR"]
+
+## Special 
+- You Click We Pick [data-dtm-track="car_class|pay_later|XXAR"]
+- Drive Happy Default
