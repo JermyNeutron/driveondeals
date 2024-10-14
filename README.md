@@ -2,7 +2,6 @@
 
 > [!WARNING]
 > The following rental services are supported:
-> - Alamo
 
 <!-- ## Setup
 
@@ -11,6 +10,15 @@
 ## Frequently Asked Questions
 -->
 ## References
+
+### Planned Support
+- Alamo (IP)
+- Enterprise
+- Hertz
+- Avis
+- Budget
+- National
+- Turo
 
 ### Libraries
 - playwright
