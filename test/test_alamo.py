@@ -7,7 +7,10 @@ sys.path.append(".")
 
 from playwright.sync_api import Page, expect, sync_playwright
 
+from functions_alamo import parser
+
 from functions_gen import file_utils, est_date, suffix, dx1rtn, dx3wknd
+
 
 def find_time():
     current_time = time.strftime("%H:%M:%S")
@@ -184,8 +187,15 @@ def test_basic_search(test: bool, hints_enabled: bool, ss_enabled: bool, instanc
     go_button.click()
     hints_enabled and print(f"CLICKED {checkmark}")
     page.wait_for_timeout(param_timeout_2)
+    print(f"waited {param_timeout_2}")
 
     
+    # TEST TEST
+    page.wait_for_timeout(10000)
+    print(f"waited 5000")
+
+    # parser.occurences_data_dtm_track(page)
+
     """
     STEPS Remaining*
 
