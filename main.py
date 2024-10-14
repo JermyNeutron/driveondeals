@@ -4,8 +4,9 @@ from datetime import datetime, date, timedelta
 import time # removable
 
 from playwright.sync_api import Page, expect, sync_playwright
-from test import test_alamo
 
+from test import test_alamo
+from functions_alamo import parser, alamo_class
 
 def get_instance_timestamp(test: bool, hints_enabled: bool) -> timedelta:
     return datetime.now()
@@ -14,13 +15,31 @@ def get_instance_timestamp(test: bool, hints_enabled: bool) -> timedelta:
 def run_alamo(test: bool, hints_enabled: bool, hl_mode: bool, ss_enabled: bool, auto_close: bool, instance_timestamp: timedelta) -> None:
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=hl_mode)
-        page = browser.new_page()
+        context = browser.new_context()
+        page = context.new_page()
         test_alamo.test_basic_search(test, hints_enabled, ss_enabled, instance_timestamp, page) # change
         if auto_close:
+            context.close()
             browser.close()
         else:
-            input("Press <Enter> to close the browser ...")
-            browser.close()
+            while True:
+                choice = int(input("""
+0) Close
+1) Occurences (data_dtm_track)
+2) Occurences (h3)
+3) Options Available
+                
+Select choice: """))
+                if choice == 1:
+                    parser.occurences_data_dtm_track(page)
+                elif choice == 2:
+                    parser.occurences_h3(page)
+                elif choice == 3:
+                    parser.options_available(page)
+                else:
+                    context.close()
+                    browser.close()
+                    break
 
 
 if __name__ == "__main__":
