@@ -51,7 +51,7 @@ def main(test: bool, hints_enabled: bool, date_pointer: datetime) -> tuple[datet
         print(f"HINT {__name__}: {{date_dow}}: {date_dow}")
         print(f"HINT {__name__}: {{date_current_month_int}}: {date_current_month_int}")
         print(f"HINT {__name__}: {{date_current_month_str}}: {date_current_month_str}")
-        print(f"HINT {__name__}: {{date_current_year}}: {date_current_year}\n")
+        print(f"HINT {__name__}: {{date_current_year}}: {date_current_year}")
     rtn_tuple = (date_pointer, time_current, date_current, date_current_day, date_current_day_sfx, date_dow, date_current_month_int, date_current_month_str, date_current_year)
     return rtn_tuple
 
@@ -70,10 +70,10 @@ def main_simp(test: bool, hints_enabled: bool, date_pointer: datetime) -> tuple[
             0) date_pointer (datetime): Returning original datetime object.
             1) date_current_day_sfx (str): (DD) with suffix, e.g. 27th.
     """
-    hints_enabled and print(f"\nHINT {__name__}: Datetime received: {date_pointer}")
+    hints_enabled and print(f"HINT {__name__}: Datetime received: {date_pointer}")
     suffix_str = suffix.main(test, hints_enabled, str(int(date_pointer.strftime("%d"))))
     rtn_tuple = (date_pointer, suffix_str)
-    hints_enabled and print(f"HINT {__name__}: Returning SIMPLE datetime tuple {checkmark}\n")
+    hints_enabled and print(f"HINT {__name__}: Returning SIMPLE datetime tuple {checkmark}")
     return rtn_tuple
 
 
