@@ -29,9 +29,9 @@
 - Convertible [data-dtm-track="car_class|pay_later|STAR"]
 - Corvette
 - Midsize Luxury Sedan
-- Midsize Sport Luxudry Sedan
-- Electric luxury Sedan
-- Full Size luxury Sedan
+- Midsize Sport Luxury Seda
+- Electric Luxury Sedan
+- Full Size Luxury Sedan
 - Performance Sport
 - Luxury Performance Sport
 - Premium Luxury Sedan
@@ -40,27 +40,61 @@
 - Ultra Luxury Sedan
 
 ## SUVs
+- Compact Electric SUV
 - Compact SUV [data-dtm-track="car_class|pay_later|CFAR"]
-- Midsize SUV [data-dtm-track="car_class|pay_later|IFAR"]
-- Jeep [data-dtm-track="car_class|pay_later|IJAR"]
+- Compact SUV AWD
+- Full Size SUV [data-dtm-track="car_class|pay_later|FFAR"] # Chevrolet Taho, Ford Expedition, Nissan Armada or similar
+- Full Size SUV AWD
 - Jeep Wrangler 4 door [data-dtm-track="car_class|pay_later|FJAR"]
-- Standard SUV [data-dtm-track="car_class|pay_later|SFAR"]
-- Standard Elite SUV [data-dtm-track="car_class|pay_later|RFAR"]
-- Premium Elite SUV [data-dtm-track="car_class|pay_later|UFAR"]
-- Premium Crossover [data-dtm-track="car_class|pay_later|PGAR"]
-- Full Size SUV [data-dtm-track="car_class|pay_later|FFAR"]
+- Full Size SUV # Chevrolet Tahoe or similar
+- Midsize SUV [data-dtm-track="car_class|pay_later|IFAR"]
+- Midsize SUV AWD
+- Jeep [data-dtm-track="car_class|pay_later|IJAR"]
 - Luxury SUV [data-dtm-track="car_class|pay_later|LFAR"]
+- Luxury SUV AWD
+- Extended Luxury SUV
 - Premium SUV [data-dtm-track="car_class|pay_later|PFAR"]
+- Premium SUV AWD
+- Premium Crossover [data-dtm-track="car_class|pay_later|PGAR"]
+- Premium Crossover AWD
+- Premium All-Terrain
+- Standard Elite SUV [data-dtm-track="car_class|pay_later|RFAR"]
+- Standard SUV [data-dtm-track="car_class|pay_later|SFAR"]
+- Standard SUV AWD
+- Standard Crossover
+- Standard Crossover AWD
 - Midsize Luxury SUV [data-dtm-track="car_class|pay_later|UDAR"]
+- Premium Elite SUV [data-dtm-track="car_class|pay_later|UFAR"]
 - Midsize Elite Luxury SUV [data-dtm-track="car_class|pay_later|WDAR"]
+- Electric Luxury SUV
+- Full Size Luxury SUV
+- Special SUV
+- Premium Luxury SUV
+- Ultra Luxury SUV
+- Medium Hybrid SUV
 
 ## Trucks
+- Full Size Electric Pickup
 - Pickup [data-dtm-track="car_class|pay_later|PPAR"]
+- Full Size Diesel Pickup
+- Full Size Electric Pickup 4WD
+- Premium Pickup 4WD
 - Standard Pickup [data-dtm-track="car_class|pay_later|SPAR"]
+- Standard Pickup 4WD
 
 ## Vans
+- 15 Passenger Van
+- 10 Passenger Van
 - 7 Passenger Minivan [data-dtm-track="car_class|pay_later|MVAR"]
+- 12 Passenger Van Med/High Roof
+- Heavy Duty Cargo Van 4WD
+- 12 Passenger Van
+- Cargo Van
+- Cargo Van 4WD
 - 8 Passenger Minivan [data-dtm-track="car_class|pay_later|SVAR"]
+- Heavy Duty High Roof Cargo Van 4WD
+- 15 Passenger Van Med/High Roof
+- Limo Van
 
 ## Special 
 - You Click We Pick [data-dtm-track="car_class|pay_later|XXAR"]
