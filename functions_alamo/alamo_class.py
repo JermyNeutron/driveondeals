@@ -1,10 +1,13 @@
 class alamo_class:
     def __init__(self, class_type: str, model: str,
+                 pax: str, lug: str,
                  data_dtm_track: str, cost_daily: str,
                  cost_total:str) -> None:
-        self.class_type = class_type
-        self.model = model
-        self.data_dtm_track = data_dtm_track
+        self.class_type = class_type # SUV, sedan, minivan, etc
+        self.model = model # Vehicle description
+        self.pax = pax # passenger capacity
+        self.lug = lug # luggage space
+        self.data_dtm_track = data_dtm_track # css attribute
         self.cost_daily = f"${cost_daily}"
         self.cost_total = f"${cost_total}"
 
