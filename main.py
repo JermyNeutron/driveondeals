@@ -28,14 +28,20 @@ def run_alamo(test: bool, hints_enabled: bool, hl_mode: bool, ss_enabled: bool, 
 1) Occurences (data_dtm_track)
 2) Occurences (h3)
 3) Options Available
+4) Check dtm's listed
+5) Lets Class 1
                 
 Select choice: """))
                 if choice == 1:
-                    parser.occurences_data_dtm_track(page)
+                    parser.occurences_data_dtm_track(hints_enabled, page)
                 elif choice == 2:
                     parser.occurences_h3(page)
                 elif choice == 3:
                     parser.options_available(page)
+                elif choice == 4:
+                    parser.check_dtm(page)
+                elif choice == 5:
+                    parser.lets_class_1(page)
                 else:
                     context.close()
                     browser.close()
