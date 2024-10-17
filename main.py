@@ -7,6 +7,7 @@ from playwright.sync_api import Page, expect, sync_playwright
 
 from test import test_alamo
 from functions_alamo import parser, alamo_class
+from functions_gen import create_db
 
 def get_instance_timestamp(test: bool, hints_enabled: bool) -> timedelta:
     return datetime.now()
@@ -41,7 +42,10 @@ Select choice: """))
                 elif choice == 4:
                     parser.check_dtm(page)
                 elif choice == 5:
-                    parser.lets_class_1(page)
+                    try:
+                        parser.lets_class_1(page)
+                    except Exception as e:
+                        print(f"Error excepted: {e}")
                 else:
                     context.close()
                     browser.close()
@@ -54,6 +58,7 @@ if __name__ == "__main__":
     hl_mode = bool(int(input("Enable headless mode? 1 | 0: "))) # headless mode
     ss_enabled = bool(int(input("Enable screenshots? 1 | 0: "))) # screenshot mode
     auto_close = bool(int(input("Automatically close browser upon script completion? 1 | 0: "))) # browser close
+    create_db.create_database(test, hints_enabled)
     instance_timestamp = get_instance_timestamp(test, hints_enabled)
 
     run_alamo(test, hints_enabled, hl_mode, ss_enabled, auto_close, instance_timestamp)
