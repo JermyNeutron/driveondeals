@@ -124,6 +124,9 @@ def test_basic_search(test: bool, hints_enabled: bool, ss_enabled: bool, instanc
         next_option_time = next_option_pu.first # resolves strict mode error (2 occurences)
         hints_enabled and print(f"VISIBLE {checkmark}")
 
+        # Need to capture value and determine time selection at least 30 minutes from reservation.
+        # Need to determine cut off reservation, possibly when local time is passed a threshold.
+
         # Time Click
         hints_enabled and print(f"HINT {__name__}: Next option is VISIBLE: {next_option_pu} ...", end=" ")
         expect(next_option_time).to_be_visible()
@@ -191,7 +194,7 @@ def test_basic_search(test: bool, hints_enabled: bool, ss_enabled: bool, instanc
 
     
     # TEST TEST
-    page.wait_for_timeout(10000)
+    page.wait_for_timeout(5000)
     print(f"waited 5000")
 
     # parser.occurences_data_dtm_track(page)
