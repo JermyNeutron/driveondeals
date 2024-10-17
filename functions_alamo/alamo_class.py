@@ -1,12 +1,27 @@
 class alamo_class:
-    def __init__(self, class_type: str, model: str,
-                 pax: str, lug: str,
-                 data_dtm_track: str, cost_daily: str,
-                 cost_total:str) -> None:
+    def __init__(self, class_type: str,
+                 model: str,
+                 pax: str,
+                 lug: str,
+                 data_dtm_track: str,
+                 date_scr_date: str,
+                 date_scr_int: int,
+                 date_rsv_date: str,
+                 date_rsv_int: int,
+                 adv_rsv: int,
+                 cost_daily: str,
+                 cost_total:str,
+                 ) -> None:
+        self.service = "Alamo"
         self.class_type = class_type # SUV, sedan, minivan, etc
         self.model = model # Vehicle description
         self.pax = pax # passenger capacity
         self.lug = lug # luggage space
+        self.date_scr_date = date_scr_date
+        self.date_scr_int = date_scr_int
+        self.date_rsv_date = date_rsv_date
+        self.date_rsv_int = date_rsv_int
+        self.adv_rsv = adv_rsv
         self.data_dtm_track = data_dtm_track # css attribute
         self.cost_daily = f"${cost_daily}"
         self.cost_total = f"${cost_total}"

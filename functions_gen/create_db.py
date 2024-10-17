@@ -22,8 +22,9 @@ def create_database(test: bool, hints_enabled: bool) -> None:
         service TEXT NOT NULL,
         type TEXT NOT NULL,
         model TEXT NOT NULL,
-        pax INTEGER NOT NULL,
-        lug INTEGER NOT NULL,
+        pax INTEGER,
+        lug INTEGER,
+        data_dtm_track TEXT NOT NULL,
         date_scr_date TEXT NOT NULL,
         date_scr_int INTEGER NOT NULL,
         date_rsv_date TEXT NOT NULL,
@@ -40,15 +41,16 @@ def create_database(test: bool, hints_enabled: bool) -> None:
         service TEXT NOT NULL,
         type TEXT NOT NULL,
         model TEXT NOT NULL,
-        pax INTEGER NOT NULL,
-        lug INTEGER NOT NULL,
+        pax INTEGER,
+        lug INTEGER,
+        data_dtm_track TEXT NOT NULL,
         date_scr_date TEXT NOT NULL,
         date_scr_int INTEGER NOT NULL,
         date_rsv_date TEXT NOT NULL,
         date_rsv_int INTEGER NOT NULL,
         adv_rsv INTEGER NOT NULL, 
         daily REAL NOT NUll,
-        total REAL NOT NULL
+        total REAL NOT NULL 
     )
     ''')
 
@@ -61,7 +63,7 @@ def create_database(test: bool, hints_enabled: bool) -> None:
 if __name__ == "__main__":
     test = True
     hints_enabled = True
-    
+
     create_database(test, hints_enabled)
 
 
