@@ -2,6 +2,9 @@
 scratch/
 test/screenshots/*_test*
 
+# Database
+rental_data.db
+
 # Pytest cache
 .pytest_cache
 
