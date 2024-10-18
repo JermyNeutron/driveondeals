@@ -1,4 +1,5 @@
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
+from datetime import time as dtt
 import re
 import time
 
@@ -12,9 +13,26 @@ from functions_alamo import parser
 from functions_gen import file_utils, est_date, suffix, dx1rtn, dx3wknd
 
 
+def minimums_rsv(test: bool, hints_enabled: bool, instance_timestamp: datetime, rsv_time: str) -> str:
+    minimums_min = 30 # threshold in minutes to extend reservation
+
+    rsv_time_str = rsv_time
+    rsv_time_pair = rsv_time_str.split(":")
+    rsv_time = dtt(int(rsv_time_pair[0]), int(rsv_time_pair[1]))
+    temp_rsv1 = datetime.combine(instance_timestamp, rsv_time)
+    temp_rsv2 = instance_timestamp
+    minimums = timedelta(minutes=15)
+    # <li id="pickupTime_10:00" class="" data-value="10:00" role="option" aria-selected="false" aria-disabled="false">10:00 AM</li>
+    if (temp_rsv1 - temp_rsv2) <= minimums:
+        rsv_time_str = (temp_rsv1 + timedelta(minutes=minimums_min)).strftime("%H:%M")
+        hints_enabled and print(f"HINT {__name__}: Reservation time below minimums; reservation time extended by.")
+    return rsv_time_str
+
+
 def find_time():
     current_time = time.strftime("%H:%M:%S")
     return current_time
+
 
 def test_basic_search(test: bool, hints_enabled: bool, ss_enabled: bool, instance_timestamp: datetime, page: Page):
     """
@@ -33,6 +51,7 @@ def test_basic_search(test: bool, hints_enabled: bool, ss_enabled: bool, instanc
     param_timeout_1 = 1000 # VERIFIED timeout for initial pop-up
     param_timeout_ss = 1000 # Timeout preceding browser screenshot, stored test/screenshots
     param_timeout_2 = 1000 # Timeout succeeding reservation start
+    param_timeout_gen_wait = 5000
     test_pu_location = "SNA"
     file_date = meta_krono[0].strftime("%Y%m%d")
     screenshot_base = f"{file_date}_test"
@@ -121,10 +140,15 @@ def test_basic_search(test: bool, hints_enabled: bool, ss_enabled: bool, instanc
     # 12:
     try:
         hints_enabled and print(f"HINT {__name__}: Step 12: {find_time()}: Expecting next_option available time to be visible ...", end=" ")
-        next_option_time = next_option_pu.first # resolves strict mode error (2 occurences)
+        next_option_time = next_option_pu.first # resolves strict mode error (2 occurences) by picking first
         hints_enabled and print(f"VISIBLE {checkmark}")
-
+        # <li id="pickupTime_10:00" class="" data-value="10:00" role="option" aria-selected="false" aria-disabled="false">10:00 AM</li>
+        selected_tag = next_option_time.get_attribute("data-value") # gets time value
+        tag_time = minimums_rsv(test, hints_enabled, instance_timestamp, selected_tag)
         # Need to capture value and determine time selection at least 30 minutes from reservation.
+
+        next_option_time = page.locator(f'li[id="pickupTime_{tag_time}"][data-value="{tag_time}"][aria-disabled="false"]')
+
         # Need to determine cut off reservation, possibly when local time is passed a threshold.
 
         # Time Click
@@ -145,7 +169,7 @@ def test_basic_search(test: bool, hints_enabled: bool, ss_enabled: bool, instanc
     next_date_to_select = page.locator(f'div[role="button"][aria-label="{aria_label_do_date}"]')
     hints_enabled and print(f"HINT {__name__}: Step 13 (result): {find_time()}: aria-label assigned {next_date_to_select} {checkmark}")
     
-    # 14: Check Date Visibility
+    # 14: Drop Off Check Date Visibility
     try:
         hints_enabled and print(f"HINT {__name__}: Step 14: {find_time()}: # Drop Off Date Visibility is", end=" ... ")
         expect(next_date_to_select).to_be_visible()
@@ -156,7 +180,7 @@ def test_basic_search(test: bool, hints_enabled: bool, ss_enabled: bool, instanc
         expect(next_date_to_select).to_be_visible()
         hints_enabled and print(f"{checkmark}")
 
-    # 15: Date Click
+    # 15: Drop Off Date Click
     try:
         hints_enabled and print(f"HINT {__name__}: Step 15: {find_time()}: # Drop Off Date selected", end=" ... ")
         next_date_to_select.click()
@@ -173,7 +197,7 @@ def test_basic_search(test: bool, hints_enabled: bool, ss_enabled: bool, instanc
     expect(date_to_select).to_be_visible()
     hints_enabled and print(f"VISIBLE {checkmark}")
 
-    # 17: Time Click
+    # 17: Drop Off Time Click
     hints_enabled and print(f"HINT {__name__}: Step 17: {find_time()}: # Drop Off Time selected", end=" ... ")
     date_to_select.click()
     hints_enabled and print(f'clicked! {checkmark}')
@@ -194,13 +218,13 @@ def test_basic_search(test: bool, hints_enabled: bool, ss_enabled: bool, instanc
 
     
     # TEST TEST
-    page.wait_for_timeout(5000)
-    print(f"waited 5000")
-
-    # parser.occurences_data_dtm_track(page)
+    page.wait_for_timeout(param_timeout_gen_wait)
+    print(f"waited {param_timeout_gen_wait/1000}s...")
 
     """
     STEPS Remaining*
+    Minimum future time reservation | probably 30 minutes
+    Create database
 
     """
 
@@ -216,6 +240,9 @@ def test_basic_search(test: bool, hints_enabled: bool, ss_enabled: bool, instanc
         hints_enabled and print(f"taken and stored at {screenshot_path}. {checkmark}")
     else:
         hints_enabled and print(f"HINT {__name__}: Step 17: {find_time()}: # Screenshot disabled per {{ss_enabled}} {xmark}")
+
+
+
 
 
 if __name__ == "__main__":
