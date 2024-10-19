@@ -1,11 +1,13 @@
 # Miscellaneous
 scratch/
 test/screenshots/*_test*
+*_logs.txt
 
 # Database
 rental_data.db
 
-# Pytest cache
+# Cache
+.DS_Store
 .pytest_cache
 
 # Python bytecode files
