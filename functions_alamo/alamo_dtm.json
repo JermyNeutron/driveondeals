@@ -55,7 +55,11 @@
         "description": null,
         "dtm": null
     },
-    "Premium": {
+    "Premium_1": {
+        "description": "Nissan Maxima or similar",
+        "dtm": "PCAR"
+    },
+    "Premium_2": {
         "description": "Chrysler 300 or similar",
         "dtm": "PDAR"
     },
