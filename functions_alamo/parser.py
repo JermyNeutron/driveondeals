@@ -7,7 +7,7 @@ sys.path.append(".")
 from playwright.sync_api import Page, expect, sync_playwright, TimeoutError
 
 from functions_alamo.alamo_class import alamo_class
-
+from functions_alamo.alamo_dtm import dtm_update
 
 # Arr
 alamo_classifications = ["car_class|pay_later|CCAR", "car_class|pay_later|ECAR", "car_class|pay_later|FCAR", "car_class|pay_later|GXAR", "car_class|pay_later|ICAR", "car_class|pay_later|LCAR", "car_class|pay_later|PCAR", "car_class|pay_later|PDAR", "car_class|pay_later|PXAR", "car_class|pay_later|RXAR", "car_class|pay_later|SCAR", "car_class|pay_later|STAR", "car_class|pay_later|CFAR", "car_class|pay_later|FFAR", "car_class|pay_later|FJAR", "car_class|pay_later|IFAR", "car_class|pay_later|IJAR", "car_class|pay_later|LFAR", "car_class|pay_later|PFAR", "car_class|pay_later|PGAR", "car_class|pay_later|RFAR", "car_class|pay_later|SFAR", "car_class|pay_later|UDAR", "car_class|pay_later|UFAR", "car_class|pay_later|WDAR", "car_class|pay_later|PPAR", "car_class|pay_later|SPAR", "car_class|pay_later|MVAR", "car_class|pay_later|SVAR", "car_class|pay_later|XXAR"]
@@ -88,7 +88,11 @@ def check_dtm(page: Page):
         print("everything was found")
 
 
-def lets_class_1(page: Page):
+### Still needs to pass time arguments for converting into classes ###
+###
+###
+### 
+def lets_class_1(test: bool, hints_enabled: bool, page: Page):
     # div
     option_element = page.locator('div[class="vehicle-select-details component-theme--light"]')
     option_tuples = []
@@ -157,6 +161,8 @@ def lets_class_1(page: Page):
         
         option_tuples.append((type_text, model_text, pax_text, lug_text, dtm_value, daily_text, total_text)) #
 
+    dtm_update(test, hints_enabled, option_tuples)
+
     # it works!
     for i in option_tuples:
         print(i)
@@ -167,7 +173,7 @@ def lets_class_1(page: Page):
         type = option[0]
         options_available[type] = alamo_class(*option)
 
-    print(options_available["Standard Elite"].cost_total)
+    # print(options_available["Standard Elite"].cost_total)
 
 
 def test():
