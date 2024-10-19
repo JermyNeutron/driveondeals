@@ -4,10 +4,15 @@ sys.path.append(".")
 
 
 # parser
+from datetime import datetime, date, timedelta
 from playwright.sync_api import Page, expect, sync_playwright, TimeoutError
+# from playwright.async_api import Page, expect, async_playwright, TimeoutError
+import tracemalloc
 
 from functions_alamo.alamo_class import alamo_class
 from functions_alamo.alamo_dtm import dtm_update
+
+tracemalloc.start()
 
 # Arr
 alamo_classifications = ["car_class|pay_later|CCAR", "car_class|pay_later|ECAR", "car_class|pay_later|FCAR", "car_class|pay_later|GXAR", "car_class|pay_later|ICAR", "car_class|pay_later|LCAR", "car_class|pay_later|PCAR", "car_class|pay_later|PDAR", "car_class|pay_later|PXAR", "car_class|pay_later|RXAR", "car_class|pay_later|SCAR", "car_class|pay_later|STAR", "car_class|pay_later|CFAR", "car_class|pay_later|FFAR", "car_class|pay_later|FJAR", "car_class|pay_later|IFAR", "car_class|pay_later|IJAR", "car_class|pay_later|LFAR", "car_class|pay_later|PFAR", "car_class|pay_later|PGAR", "car_class|pay_later|RFAR", "car_class|pay_later|SFAR", "car_class|pay_later|UDAR", "car_class|pay_later|UFAR", "car_class|pay_later|WDAR", "car_class|pay_later|PPAR", "car_class|pay_later|SPAR", "car_class|pay_later|MVAR", "car_class|pay_later|SVAR", "car_class|pay_later|XXAR"]
@@ -92,24 +97,24 @@ def check_dtm(page: Page):
 ###
 ###
 ### 
-def lets_class_1(test: bool, hints_enabled: bool, page: Page):
+def lets_class_1(test: bool, hints_enabled: bool, meta_krono: tuple, next_day_meta: tuple, page: Page):
     # div
     option_element = page.locator('div[class="vehicle-select-details component-theme--light"]')
+    option_count = option_element.count()
     option_tuples = []
-    
-    for i in range(option_element.count()):
-    # type
+    for i in range(option_count):
+        # type
         element_type = option_element.nth(i).locator('h3[class="vehicle-select-details__header"]')
         type_text = element_type.inner_text()
    
-    # model
+        # model
         element_model = option_element.nth(i).locator('p[class="vehicle-select-details__make-model"]')
         model_text = element_model.inner_text()
 
-    # # Vehicle Info
+        # # Vehicle Info
         # vehicle_info = option_element.nth(i).locator('ul[class="vehicle-details-icon-list"]')
    
-    # # pax
+        # # pax
         try:
             element_pax = option_element.nth(i).locator('li[class="vehicle-details-icon-list__icon vehicle-details-icon-list__icon--passenger"]')
             
@@ -123,7 +128,7 @@ def lets_class_1(test: bool, hints_enabled: bool, page: Page):
             print(f'unexpected exception made for {type_text}: {e}')
             pax_text = None
             
-    # # lug
+        # # lug
         try:
             element_lug = option_element.nth(i).locator('li[class="vehicle-details-icon-list__icon vehicle-details-icon-list__icon--suitcase"]')
             lug_full = element_lug.text_content(timeout=1000)
@@ -136,7 +141,7 @@ def lets_class_1(test: bool, hints_enabled: bool, page: Page):
             print(f'unexpected exception made for {type_text}: {e}')
             lug_text = None
 
-    # data_dtm_track
+        # # data_dtm_track
         dtm_att = "car_class|pay_later|"
         button_frmt = "data_dtm_track"
         button_dtm = option_element.nth(i).locator(f'button[data_dtm_track^="{dtm_att}"]')
@@ -145,33 +150,62 @@ def lets_class_1(test: bool, hints_enabled: bool, page: Page):
             button_dtm = option_element.nth(i).locator(f'button[data-dtm-track^="{dtm_att}"]')
         dtm_value = button_dtm.get_attribute(button_frmt).replace(dtm_att, "").strip()
 
-    # daily $
+        # # daily $
         element_daily = option_element.nth(i).locator('p[class="vehicle-price-component__charge"]')
         daily_full = element_daily.text_content()
         daily_span1 = element_daily.locator('span[class="vehicle-price-component__pay-symbol"]').text_content()
         daily_span2 = element_daily.locator('span[class="vehicle-price-component__total-text vehicle-price-component__rate-text"]').text_content()
         daily_text = daily_full.replace(daily_span1, "").replace(daily_span2, "").strip()
     
-    # total $
+        # # total $
         element_total = option_element.nth(i).locator('p[class="vehicle-price-component__charge vehicle-price-component__charge--secondary"]')
         total_full = element_total.text_content()
         total_span1 = element_total.locator('span[class="vehicle-price-component__pay-symbol"]').text_content()
         total_span2 = element_total.locator('span[class="vehicle-price-component__total-text"]').text_content()
         total_text = total_full.replace(total_span1, "").replace(total_span2, "").strip()
         
-        option_tuples.append((type_text, model_text, pax_text, lug_text, dtm_value, daily_text, total_text)) #
+        # # Datetime calcutions
+        date_scr_date = meta_krono[0].strftime("%Y-%m-%d")
+        date_scr_int = int(meta_krono[0].strftime("%w"))
+        date_rsv_date = next_day_meta[0].strftime("%Y-%m-%d")
+        date_rsv_int = int(next_day_meta[0].strftime("%w"))
+        adv_rsv = (next_day_meta[0] - meta_krono[0]).days
 
-    dtm_update(test, hints_enabled, option_tuples)
 
-    # it works!
-    for i in option_tuples:
-        print(i)
+        option_tuples.append((type_text,
+                              model_text, 
+                              pax_text,
+                              lug_text, 
+                              dtm_value,
+                              date_scr_date,
+                              date_scr_int,
+                              date_rsv_date,
+                              date_rsv_int,
+                              adv_rsv,
+                              daily_text,
+                              total_text)) #
 
-    options_available = {}
 
+    option_tuples_cleaned = []
+    option_tuples_dup = set()
     for option in option_tuples:
-        type = option[0]
-        options_available[type] = alamo_class(*option)
+        if option not in option_tuples_dup:
+            option_tuples_cleaned.append(option)
+            option_tuples_dup.add(option)
+
+    dtm_update(False, hints_enabled, option_tuples_cleaned)
+
+    print('\n')
+    # it works!
+    if test:
+        for i in option_tuples_cleaned:
+            print(i)
+
+    # # create classes
+    # options_available = {}
+    # for option in option_tuples:
+    #     type = option[0]
+    #     options_available[type] = alamo_class(*option)
 
     # print(options_available["Standard Elite"].cost_total)
 
@@ -189,3 +223,4 @@ def test():
 
 if __name__ == "__main__":
     test()
+    tracemalloc.stop()
