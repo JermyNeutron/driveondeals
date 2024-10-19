@@ -73,4 +73,12 @@ Things I want to know:
 - how far in advance generally gets you the cheapest rental cost for 3 day weekend
 - how many times does a 3 day weekend cost change throughout the week
 - 
+
+# example of how to iterate each of objects to place into the database
+# Insert each tuple into the database
+for rental_data in rental_data_array:
+    cursor.execute('''
+    INSERT INTO rental_records (rental_service, rental_type, price, rental_date)
+    VALUES (?, ?, ?, ?);
+    ''', rental_data)  # Pass each tuple as parameters
 """
