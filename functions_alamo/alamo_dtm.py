@@ -1,3 +1,17 @@
+import sys
+import json
+import logging
+from collections import OrderedDict
+
+sys.path.append(".")
+
+from functions_alamo import example_tuples
+
+from functions_gen import import_logging
+
+import_logging.set_logging("functions_alamo/alamo_dtm_logs.txt")
+
+
 dtm_list = {
     # Sedans
     "Compact": {"dtm": "CCAR", "description": None},
@@ -98,9 +112,56 @@ dtm_list = {
 }
 
 
-def dtm_update(test: bool, hints_enabled: bool):
-    pass
+# ('Midsize SUV', 'Nissan Rogue or similar', '5', '4', 'IFAR', '70.00', '88.30')
+
+def dtm_update(test: bool, hints_enabled: bool, query: list) -> None:
+    """
+    Compares and updates alamo_dtm.json with alamo classes.
+
+    Args:
+        test (bool)
+        hints_enabled (bool)
+        query (list)
+
+    Returns:
+        None
+    """
+    # Load alamo dtm's
+    with open("functions_alamo/alamo_dtm.json", "r") as file:
+        dtm_import_list = json.load(file)
+
+    # Was there a change?
+    alt = 0
+    # Compare dtms and descriptions
+    for i in query:
+        # if type Premium (since there are 2 of them)
+        if i[0] == "Premium":
+            pass
+        # everything else
+        elif i[0] in dtm_import_list:
+            test and print(dtm_import_list[i[0]])
+            if i[1] != dtm_import_list[i[0]]["description"]:
+                dtm_import_list[i[0]]["description"] = i[1]
+                logging.info(f'HINT {__name__}: "{i[0]}" had their description assigned to "{i[1]}".')
+                alt += 1
+            if i[4] != dtm_import_list[i[0]]["dtm"]:
+                dtm_import_list[i[0]]["dtm"] = i[4]
+                logging.info(f'HINT {__name__}: "{i[0]}" had their dtm assigned to "{i[4]}".')
+                alt += 1
+        else:
+            print('we found something new')
+    
+    if alt == 0:
+        hints_enabled and print(f"HINT {__name__}: dtm's in alamo_dtm.json are up to date.")
+    # write to json file
+    else:
+        with open("functions_alamo/alamo_dtm.json", "w") as f:
+            json.dump(dtm_import_list, f, indent=4)
+        
 
 
 if __name__ == "__main__":
-    pass
+    test = False
+    hints_enabled = True
+    myvar = example_tuples.example_tuples
+    dtm_update(test, hints_enabled, myvar)
