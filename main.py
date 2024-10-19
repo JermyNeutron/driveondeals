@@ -1,13 +1,19 @@
 # Drive On Deals
 
+import asyncio
 from datetime import datetime, date, timedelta
 import time # removable
+import tracemalloc
 
 from playwright.sync_api import Page, expect, sync_playwright
+# from playwright.async_api import async_playwright
 
 from test import test_alamo
 from functions_alamo import parser, alamo_class
 from functions_gen import create_db
+
+tracemalloc.start()
+
 
 def get_instance_timestamp(test: bool, hints_enabled: bool) -> timedelta:
     return datetime.now()
@@ -30,9 +36,9 @@ def run_alamo(test: bool, hints_enabled: bool, hl_mode: bool, ss_enabled: bool, 
 2) Occurences (h3)
 3) Options Available
 4) Check dtm's listed
-5) Lets Class 1
                 
 Select choice: """))
+# 5) Lets Class 1
                 if choice == 1:
                     parser.occurences_data_dtm_track(hints_enabled, page)
                 elif choice == 2:
@@ -41,11 +47,11 @@ Select choice: """))
                     parser.options_available(page)
                 elif choice == 4:
                     parser.check_dtm(page)
-                elif choice == 5:
-                    try:
-                        parser.lets_class_1(test, hints_enabled, page)
-                    except Exception as e:
-                        print(f"Error excepted: {e}")
+                # elif choice == 5:
+                #     try:
+                #         parser.lets_class_1(test, hints_enabled, page)
+                #     except Exception as e:
+                #         print(f"Error excepted: {e}")
                 else:
                     context.close()
                     browser.close()
@@ -62,3 +68,5 @@ if __name__ == "__main__":
     instance_timestamp = get_instance_timestamp(test, hints_enabled)
 
     run_alamo(test, hints_enabled, hl_mode, ss_enabled, auto_close, instance_timestamp)
+
+    tracemalloc.stop()
