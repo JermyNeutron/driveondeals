@@ -1,17 +1,21 @@
+import asyncio
 from datetime import datetime, date, timedelta
 from datetime import time as dtt
 import re
 import time
+import tracemalloc
 
 import sys
 sys.path.append(".")
 
 from playwright.sync_api import Page, expect, sync_playwright
+# from playwright.async_api import Page, expect, async_playwright
 
 from functions_alamo import parser
 
 from functions_gen import file_utils, est_date, suffix, dx1rtn, dx3wknd
 
+tracemalloc.start()
 
 def minimums_rsv(test: bool, hints_enabled: bool, instance_timestamp: datetime, rsv_time: str) -> str:
     minimums_min = 30 # threshold in minutes to extend reservation
@@ -34,7 +38,10 @@ def find_time():
     return current_time
 
 
-def test_basic_search(test: bool, hints_enabled: bool, ss_enabled: bool, instance_timestamp: datetime, page: Page):
+def test_basic_search(test: bool, hints_enabled: bool,
+                      ss_enabled: bool,
+                      instance_timestamp: datetime,
+                      page: Page):
     """
     Alamo Car Rental test function
 
@@ -59,36 +66,46 @@ def test_basic_search(test: bool, hints_enabled: bool, ss_enabled: bool, instanc
     checkmark = "\u2713"
     xmark = "\u2715"
 
-
+    snapshot1 = tracemalloc.take_snapshot()
     # 1: Go To Webpage
     hints_enabled and print(f"HINT {__name__}: Step 1: {find_time()}: # Go To Webpage", end=" ")
     page.goto("https://www.alamo.com/en/reserve.html#/start")
     hints_enabled and print(f"{checkmark}")
+    snapshot2 = tracemalloc.take_snapshot()
+    snapshots1_2 = snapshot2.compare_to(snapshot1, 'lineno')
+    for stat in snapshots1_2[:10]:
+        print(stat)
 
+    snapshot3 = tracemalloc.take_snapshot()
     # 2: Verify Webpage
     hints_enabled and print(f"HINT {__name__}: Step 2: {find_time()}: # Verify Webpage", end=" ")
     expect(page).to_have_title(re.compile("Alamo Rent a Car"))
     hints_enabled and print(f"{checkmark}")
-    
+    snapshot4 = tracemalloc.take_snapshot()
+
+    snapshot5 = tracemalloc.take_snapshot()
     # 3: Load Webpage
     hints_enabled and print(f"HINT {__name__}: Step 3: {find_time()}: # Load Webpage", end=" ")
     page.wait_for_load_state("load")
     hints_enabled and print(f"{checkmark}")
-    
+    snapshot6 = tracemalloc.take_snapshot()
 
+    snapshot7= tracemalloc.take_snapshot()
     # VARIABLE: Location Search
     # 4: Enter Pick Up Location
     hints_enabled and print(f"HINT {__name__}: Step 4: {find_time()}: # Enter Pick Up Location", end=" ")
     page.locator("#pickupLocation").fill(test_pu_location)
     hints_enabled and print(f"{checkmark}")
-
+    snapshot8 = tracemalloc.take_snapshot()
+    
+    snapshot9 = tracemalloc.take_snapshot()
     # VARIABLE: Location Selection
     # 5: Select First Populated Option
     hints_enabled and print(f"HINT {__name__}: Step 5: {find_time()}: # Select First Populated Option: {test_pu_location} ...", end=" ") # VARIABLE: variable needs to change to reflect actual use case entry
     page.wait_for_selector("role=option")
     page.get_by_role("option").first.click()
     hints_enabled and print(f"selected {test_pu_location} {checkmark}") # VARIABLE: variable needs to change to reflect actual use case
-
+    snapshot10 = tracemalloc.take_snapshot()
 
     # 6: Close Pop Up
     hints_enabled and print(f"HINT {__name__}: Step 6: {find_time()}: # Close Pop Up", end=" ")
@@ -164,6 +181,8 @@ def test_basic_search(test: bool, hints_enabled: bool, ss_enabled: bool, instanc
     # Aria-label format: "Choose Saturday, October 12th, 2024"
     # Hypothesis: easy copy/paste of pick-up date
     hints_enabled and print(f"HINT {__name__}: Step 13: {find_time()}: # Assigning Next Date As Pick Up ...")
+    
+    # variable, insert option to determine dx1rtn vs dx3rtn
     next_day_meta = dx1rtn.main_simp(test, hints_enabled, meta_krono[0])
     aria_label_do_date = f"Choose {next_day_meta[0].strftime('%A')}, {next_day_meta[0].strftime('%B')} {next_day_meta[1]}, {next_day_meta[0].strftime('%Y')}"
     next_date_to_select = page.locator(f'div[role="button"][aria-label="{aria_label_do_date}"]')
@@ -221,6 +240,13 @@ def test_basic_search(test: bool, hints_enabled: bool, ss_enabled: bool, instanc
     page.wait_for_timeout(param_timeout_gen_wait)
     print(f"waited {param_timeout_gen_wait/1000}s...")
 
+
+    # importing parser lets class 1
+    try:
+        parser.lets_class_1(test, hints_enabled, meta_krono, next_day_meta, page)
+    except Exception as e:
+        print(e)
+
     """
     STEPS Remaining*
     Minimum future time reservation | probably 30 minutes
@@ -241,6 +267,7 @@ def test_basic_search(test: bool, hints_enabled: bool, ss_enabled: bool, instanc
     else:
         hints_enabled and print(f"HINT {__name__}: Step 17: {find_time()}: # Screenshot disabled per {{ss_enabled}} {xmark}")
 
+    tracemalloc.stop()
 
 
 
