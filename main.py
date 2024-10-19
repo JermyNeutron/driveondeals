@@ -43,7 +43,7 @@ Select choice: """))
                     parser.check_dtm(page)
                 elif choice == 5:
                     try:
-                        parser.lets_class_1(page)
+                        parser.lets_class_1(test, hints_enabled, page)
                     except Exception as e:
                         print(f"Error excepted: {e}")
                 else:
