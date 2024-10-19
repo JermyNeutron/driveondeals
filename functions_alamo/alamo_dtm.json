@@ -1,0 +1,342 @@
+{
+    "Compact": {
+        "description": "Nissan Versa or similar",
+        "dtm": "CCAR"
+    },
+    "Compact Convertible": {
+        "description": null,
+        "dtm": null
+    },
+    "Compact Special": {
+        "description": null,
+        "dtm": null
+    },
+    "Economy": {
+        "description": "Mitsubishi Mirage or similar",
+        "dtm": "ECAR"
+    },
+    "Full Size Hybrid": {
+        "description": null,
+        "dtm": null
+    },
+    "Full Size": {
+        "description": "Toyota Camry or Chevrolet Malibu or similar",
+        "dtm": "FCAR"
+    },
+    "Full Size Elite Electric": {
+        "description": null,
+        "dtm": null
+    },
+    "Full Size Elite": {
+        "description": "Audi A5 Sportback or similar",
+        "dtm": "GXAR"
+    },
+    "Intermediate Electric": {
+        "description": null,
+        "dtm": null
+    },
+    "Midsize": {
+        "description": "Toyota Corolla or similar",
+        "dtm": "ICAR"
+    },
+    "Midsize Convertible": {
+        "description": null,
+        "dtm": null
+    },
+    "Luxury": {
+        "description": "Audi A4 or BMW 3 Series or similar",
+        "dtm": "LCAR"
+    },
+    "Luxury Sport": {
+        "description": null,
+        "dtm": null
+    },
+    "Luxury Convertible": {
+        "description": null,
+        "dtm": null
+    },
+    "Premium": {
+        "description": "Chrysler 300 or similar",
+        "dtm": "PDAR"
+    },
+    "American Muscle Car": {
+        "description": null,
+        "dtm": null
+    },
+    "Premium Special": {
+        "description": "Audi A3 or BMW 2 Series Gran Coupe or similar",
+        "dtm": "PXAR"
+    },
+    "Standard Elite": {
+        "description": "BMW 228i Gran Coupe or similar",
+        "dtm": "RXAR"
+    },
+    "Standard Hybrid": {
+        "description": null,
+        "dtm": null
+    },
+    "Standard": {
+        "description": "VW Jetta or similar",
+        "dtm": "SCAR"
+    },
+    "Sporty Car": {
+        "description": null,
+        "dtm": null
+    },
+    "Convertible": {
+        "description": "Ford Mustang Convertible or similar",
+        "dtm": "STAR"
+    },
+    "Corvette": {
+        "description": null,
+        "dtm": null
+    },
+    "Midsize Luxury Sedan": {
+        "description": null,
+        "dtm": null
+    },
+    "Midsize Sport Luxury Sedan": {
+        "description": null,
+        "dtm": null
+    },
+    "Electric Luxury Sedan": {
+        "description": null,
+        "dtm": null
+    },
+    "Full Size Luxury Sedan": {
+        "description": null,
+        "dtm": null
+    },
+    "Performance Sport": {
+        "description": null,
+        "dtm": null
+    },
+    "Luxury Performance Sport": {
+        "description": null,
+        "dtm": null
+    },
+    "Premium Luxury Sedan": {
+        "description": null,
+        "dtm": null
+    },
+    "Ultra Performance Sport": {
+        "description": null,
+        "dtm": null
+    },
+    "Elite Performance Sport": {
+        "description": null,
+        "dtm": null
+    },
+    "Ultra Luxury Sedan": {
+        "description": null,
+        "dtm": null
+    },
+    "Compact Electric SUV": {
+        "description": null,
+        "dtm": null
+    },
+    "Compact SUV": {
+        "description": "Hyundai Kona or similar",
+        "dtm": "CFAR"
+    },
+    "Compact SUV AWD": {
+        "description": null,
+        "dtm": null
+    },
+    "Full Size SUV": {
+        "description": "Chevrolet Tahoe, Ford Expedition, Nissan Armada or similar",
+        "dtm": "FFAR"
+    },
+    "Full Size SUV AWD": {
+        "description": null,
+        "dtm": null
+    },
+    "Jeep Wrangler 4 door": {
+        "description": "Jeep Wrangler Unlimited or similar",
+        "dtm": "FJAR"
+    },
+    "Midsize SUV": {
+        "description": "Nissan Rogue or similar",
+        "dtm": "IFAR"
+    },
+    "Midsize SUV AWD": {
+        "description": null,
+        "dtm": null
+    },
+    "Jeep": {
+        "description": "Jeep Wrangler 2 Door or similar",
+        "dtm": "IJAR"
+    },
+    "Luxury SUV": {
+        "description": "Lincoln Navigator, Infiniti QX80 or similar",
+        "dtm": "LFAR"
+    },
+    "Luxury SUV AWD": {
+        "description": null,
+        "dtm": null
+    },
+    "Extended Luxury SUV": {
+        "description": null,
+        "dtm": null
+    },
+    "Premium SUV": {
+        "description": null,
+        "dtm": "PFAR"
+    },
+    "Premium SUV AWD": {
+        "description": null,
+        "dtm": null
+    },
+    "Premium Crossover": {
+        "description": "Dodge Durango or similar",
+        "dtm": "PGAR"
+    },
+    "Premium Crossover AWD": {
+        "description": null,
+        "dtm": null
+    },
+    "Premium All-Terrain": {
+        "description": null,
+        "dtm": null
+    },
+    "Standard Elite SUV": {
+        "description": "Audi Q3, Cadillac XT4 or similar",
+        "dtm": "RFAR"
+    },
+    "Standard SUV": {
+        "description": "Chevrolet Equinox or similar",
+        "dtm": "SFAR"
+    },
+    "Standard SUV AWD": {
+        "description": null,
+        "dtm": null
+    },
+    "Standard Crossover": {
+        "description": null,
+        "dtm": null
+    },
+    "Standard Crossover AWD": {
+        "description": null,
+        "dtm": null
+    },
+    "Midsize Luxury SUV": {
+        "description": "Mercedes GLE, BMW X5 or similar",
+        "dtm": "UDAR"
+    },
+    "Premium Elite SUV": {
+        "description": null,
+        "dtm": "UFAR"
+    },
+    "Midsize Elite Luxury SUV": {
+        "description": "Audi Q7, Volvo XC90 or similar",
+        "dtm": "WDAR"
+    },
+    "Electric Luxury SUV": {
+        "description": null,
+        "dtm": null
+    },
+    "Full Size Luxury SUV": {
+        "description": "BMW X7, Range Rover Sport or similar",
+        "dtm": "WFAR"
+    },
+    "Special SUV": {
+        "description": null,
+        "dtm": null
+    },
+    "Premium Luxury SUV": {
+        "description": null,
+        "dtm": null
+    },
+    "Ultra Luxury SUV": {
+        "description": null,
+        "dtm": null
+    },
+    "Medium Hybrid SUV": {
+        "description": null,
+        "dtm": null
+    },
+    "Full Size Electric Pickup": {
+        "description": null,
+        "dtm": null
+    },
+    "Pickup": {
+        "description": "Ford F150 or similar",
+        "dtm": "PPAR"
+    },
+    "Full Size Diesel Pickup": {
+        "description": null,
+        "dtm": null
+    },
+    "Full Size Electric Pickup 4WD": {
+        "description": null,
+        "dtm": null
+    },
+    "Premium Pickup 4WD": {
+        "description": null,
+        "dtm": null
+    },
+    "Standard Pickup": {
+        "description": "Toyota Tacoma or similar",
+        "dtm": "SPAR"
+    },
+    "Standard Pickup 4WD": {
+        "description": null,
+        "dtm": null
+    },
+    "15 Passenger Van": {
+        "description": null,
+        "dtm": null
+    },
+    "10 Passenger Van": {
+        "description": null,
+        "dtm": null
+    },
+    "7 Passenger Minivan": {
+        "description": "Chrysler Pacifica or similar",
+        "dtm": "MVAR"
+    },
+    "12 Passenger Van Med/High Roof": {
+        "description": null,
+        "dtm": null
+    },
+    "Heavy Duty Cargo Van 4WD": {
+        "description": null,
+        "dtm": null
+    },
+    "12 Passenger Van": {
+        "description": null,
+        "dtm": null
+    },
+    "Cargo Van": {
+        "description": null,
+        "dtm": null
+    },
+    "Cargo Van 4WD": {
+        "description": null,
+        "dtm": null
+    },
+    "8 Passenger Minivan": {
+        "description": null,
+        "dtm": "SVAR"
+    },
+    "Heavy Duty High Roof Cargo Van 4WD": {
+        "description": null,
+        "dtm": null
+    },
+    "15 Passenger Van Med/High Roof": {
+        "description": null,
+        "dtm": null
+    },
+    "Limo Van": {
+        "description": null,
+        "dtm": null
+    },
+    "You Click We Pick": {
+        "description": "Vehicle determined upon pick-up, Compact or Larger",
+        "dtm": "XXAR"
+    },
+    "Drive Happy Default": {
+        "description": null,
+        "dtm": null
+    }
+}
