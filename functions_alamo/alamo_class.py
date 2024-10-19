@@ -10,7 +10,7 @@ class alamo_class:
                  date_rsv_int: int,
                  adv_rsv: int,
                  cost_daily: str,
-                 cost_total:str,
+                 cost_total: str,
                  ) -> None:
         self.service = "Alamo"
         self.class_type = class_type # SUV, sedan, minivan, etc
@@ -23,8 +23,8 @@ class alamo_class:
         self.date_rsv_int = date_rsv_int
         self.adv_rsv = adv_rsv
         self.data_dtm_track = data_dtm_track # css attribute
-        self.cost_daily = f"${cost_daily}"
-        self.cost_total = f"${cost_total}"
+        self.cost_daily = float(cost_daily)
+        self.cost_total = float(cost_total)
 
 
 if __name__ == "__main__":
