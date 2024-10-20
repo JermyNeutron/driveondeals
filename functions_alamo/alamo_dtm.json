@@ -152,8 +152,8 @@
         "dtm": "FFAR"
     },
     "Full Size SUV AWD": {
-        "description": null,
-        "dtm": null
+        "description": "Chevrolet Tahoe, Ford Expedition, Nissan Armada or similar",
+        "dtm": "FFDR"
     },
     "Jeep Wrangler 4 door": {
         "description": "Jeep Wrangler Unlimited or similar",
@@ -228,7 +228,7 @@
         "dtm": "UDAR"
     },
     "Premium Elite SUV": {
-        "description": null,
+        "description": "Audi Q5 or similar",
         "dtm": "UFAR"
     },
     "Midsize Elite Luxury SUV": {
