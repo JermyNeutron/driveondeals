@@ -93,10 +93,6 @@ def check_dtm(page: Page):
         print("everything was found")
 
 
-### Still needs to pass time arguments for converting into classes ###
-###
-###
-### 
 def lets_class_1(test: bool, hints_enabled: bool, meta_krono: tuple, next_day_meta: tuple, page: Page):
     # div
     option_element = page.locator('div[class="vehicle-select-details component-theme--light"]')
@@ -110,9 +106,6 @@ def lets_class_1(test: bool, hints_enabled: bool, meta_krono: tuple, next_day_me
         # model
         element_model = option_element.nth(i).locator('p[class="vehicle-select-details__make-model"]')
         model_text = element_model.inner_text()
-
-        # # Vehicle Info
-        # vehicle_info = option_element.nth(i).locator('ul[class="vehicle-details-icon-list"]')
    
         # # pax
         try:
@@ -183,7 +176,7 @@ def lets_class_1(test: bool, hints_enabled: bool, meta_krono: tuple, next_day_me
                               date_rsv_int,
                               adv_rsv,
                               daily_text,
-                              total_text)) #
+                              total_text))
 
 
     option_tuples_cleaned = []
@@ -201,13 +194,16 @@ def lets_class_1(test: bool, hints_enabled: bool, meta_krono: tuple, next_day_me
         for i in option_tuples_cleaned:
             print(i)
 
-    # # create classes
-    # options_available = {}
-    # for option in option_tuples:
-    #     type = option[0]
-    #     options_available[type] = alamo_class(*option)
+    # create classes
+    options_available = {}
+    for option in option_tuples_cleaned:
+        rental_type = option[0]
+        options_available[rental_type] = alamo_class(*option)
 
-    # print(options_available["Standard Elite"].cost_total)
+    print('printing objects...\n')
+    for rental_type, rental_object in options_available.items():
+        print(rental_type)
+        print(rental_object.model)
 
 
 def test():
