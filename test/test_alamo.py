@@ -270,8 +270,6 @@ def test_basic_search(test: bool, hints_enabled: bool,
     tracemalloc.stop()
 
 
-
-
 if __name__ == "__main__":
     test = True
     hints_enabled = True
