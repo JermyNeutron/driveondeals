@@ -72,6 +72,9 @@ Things I want to know:
 - how far in advance generally gets you the cheapest rental cost for single day
 - how far in advance generally gets you the cheapest rental cost for 3 day weekend
 - how many times does a 3 day weekend cost change throughout the week
+- which day on average was the chepeast 1 day rental
+- which weekend had the cheapest rental
+- each service's cheapest rental for each type
 - 
 
 # example of how to iterate each of objects to place into the database
@@ -81,7 +84,4 @@ for rental_data in rental_data_array:
     INSERT INTO rental_records (rental_service, rental_type, price, rental_date)
     VALUES (?, ?, ?, ?);
     ''', rental_data)  # Pass each tuple as parameters
-- which day on average was the chepeast 1 day rental
-- which weekend had the cheapest rental
-- each service's cheapest rental for each type
 """
