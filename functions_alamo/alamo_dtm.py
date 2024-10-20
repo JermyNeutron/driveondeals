@@ -112,7 +112,7 @@ dtm_list = {
 }
 
 
-# ('Midsize SUV', 'Nissan Rogue or similar', '5', '4', 'IFAR', '70.00', '88.30')
+# Test with ('Midsize SUV', 'Nissan Rogue or similar', '5', '4', 'IFAR', '70.00', '88.30')
 
 def dtm_update(test: bool, hints_enabled: bool, query: list) -> None:
     """
@@ -156,8 +156,7 @@ def dtm_update(test: bool, hints_enabled: bool, query: list) -> None:
     # write to json file
     else:
         with open("functions_alamo/alamo_dtm.json", "w") as f:
-            json.dump(dtm_import_list, f, indent=4)
-        
+            json.dump(dtm_import_list, f, indent=4)        
 
 
 if __name__ == "__main__":
