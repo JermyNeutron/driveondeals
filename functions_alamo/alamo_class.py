@@ -1,5 +1,7 @@
 class alamo_class:
-    def __init__(self, class_type: str,
+    def __init__(self,
+                 service: str,
+                 class_type: str,
                  model: str,
                  pax: str,
                  lug: str,
@@ -12,7 +14,7 @@ class alamo_class:
                  cost_daily: str,
                  cost_total: str,
                  ) -> None:
-        self.service = "Alamo"
+        self.service = service
         self.class_type = class_type # SUV, sedan, minivan, etc
         self.model = model # Vehicle description
         self.pax = pax # passenger capacity
@@ -28,7 +30,8 @@ class alamo_class:
 
 
 if __name__ == "__main__":
+    pass
 
-    my_car = alamo_class("Full Size", "Nissan Altima or similar", "car_class|pay_later|CFAR", "125.01", "150.20")
-
+    # Test
+    my_car = alamo_class('Alamo', 'Standard Pickup', 'Toyota Tacoma or similar', '4', '3', 'SPAR', '2024-10-21', 1, '2024-10-22', 2, 1, '104.02', '131.50')
     print(my_car.__dict__)
