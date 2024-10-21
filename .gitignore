@@ -1,6 +1,7 @@
 # Miscellaneous
 scratch/
 test/screenshots/*_test*
+functions_alamo/*_test*
 *_logs.txt
 
 # Database
