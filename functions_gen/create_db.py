@@ -1,3 +1,4 @@
+import csv
 import sqlite3
 
 def create_database(test: bool, hints_enabled: bool) -> None:
@@ -60,11 +61,48 @@ def create_database(test: bool, hints_enabled: bool) -> None:
     hints_enabled and print(f'HINT {__name__}: rental_data.db closed.')
 
 
+def db_update(test: bool, hints_enabled: bool, option_tuples_cleaned: list) -> None:
+    connection = sqlite3.connect('rental_data.db')
+    hints_enabled and print(f'HINT {__name__}: rental_data.db accessed.')
+    cursor = connection.cursor()
+
+    for option in option_tuples_cleaned:
+        cursor.execute('''
+            INSERT INTO rental_prices (service, type, model, pax, lug, data_dtm_track, date_scr_date, date_scr_int, date_rsv_date, date_rsv_int, adv_rsv, daily, total)
+            Values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        ''', option)
+
+    connection.commit()
+    connection.close()
+
+
+def db_export_rental_prices(test: bool, hints_enabled: bool, service: str) -> None:
+    connection = sqlite3.connect('rental_data.db')
+    cursor = connection.cursor()
+
+    # specific folder
+    cursor.execute('SELECT * FROM rental_prices')
+
+    rows = cursor.fetchall()
+
+    column_names = [description[0] for description in cursor.description]
+
+    export_path = f'test/rental_prices_export_{service}.csv' if test else f'temp/rental_prices_export_{service}.csv'
+    with open(export_path, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(column_names)
+        writer.writerows(rows)
+
+    connection.close()
+    hints_enabled and print(f'HINT {__name__}: Data exported to {export_path}')
+
+
 if __name__ == "__main__":
     test = True
     hints_enabled = True
 
     create_database(test, hints_enabled)
+    # db_export_rental_prices(test, hints_enabled)
 
 
 """
