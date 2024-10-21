@@ -11,6 +11,7 @@ import tracemalloc
 
 from functions_alamo.alamo_class import alamo_class
 from functions_alamo.alamo_dtm import dtm_update
+from functions_gen import create_db
 
 tracemalloc.start()
 
@@ -164,8 +165,9 @@ def lets_class_1(test: bool, hints_enabled: bool, meta_krono: tuple, next_day_me
         date_rsv_int = int(next_day_meta[0].strftime("%w"))
         adv_rsv = (next_day_meta[0] - meta_krono[0]).days
 
-
-        option_tuples.append((type_text,
+        service_default = "Alamo"
+        option_tuples.append((service_default,
+                              type_text,
                               model_text, 
                               pax_text,
                               lug_text, 
@@ -186,24 +188,39 @@ def lets_class_1(test: bool, hints_enabled: bool, meta_krono: tuple, next_day_me
             option_tuples_cleaned.append(option)
             option_tuples_dup.add(option)
 
+    # write to txt for testing
+    with open("functions_alamo/example_tuples_test.txt", "w") as file:
+        for i in option_tuples_cleaned:
+            file.write(f"{i}\n")
+
+    # auto update to populate known dtm trackers
     dtm_update(False, hints_enabled, option_tuples_cleaned)
 
-    print('\n')
-    # it works!
-    if test:
-        for i in option_tuples_cleaned:
-            print(i)
+    # add entries to database
+    create_db.db_update(test, hints_enabled, option_tuples_cleaned)
 
-    # create classes
-    options_available = {}
-    for option in option_tuples_cleaned:
-        rental_type = option[0]
-        options_available[rental_type] = alamo_class(*option)
+    # export updated database to temp csv
+    # test csv path: 'test/rental_prices_export_alamo.csv'
+    # actual csv path: 'temp/rental_prices_export_alamo.csv'
+    create_db.db_export_rental_prices(test, hints_enabled, service_default)
 
-    print('printing objects...\n')
-    for rental_type, rental_object in options_available.items():
-        print(rental_type)
-        print(rental_object.model)
+    # # it works!
+    # print('\n')
+    # if test:
+    #     for i in option_tuples_cleaned:
+    #         print(i)
+
+
+    # # create classes
+    # options_available = {}
+    # for option in option_tuples_cleaned:
+    #     rental_type = option[0]
+    #     options_available[rental_type] = alamo_class(*option)
+
+    # print('printing objects...\n')
+    # for rental_type, rental_object in options_available.items():
+    #     print(rental_type)
+    #     print(rental_object.model)
 
 
 def test():
@@ -215,8 +232,6 @@ def test():
     pass
 
 
-
-
 if __name__ == "__main__":
-    test()
+    pass
     tracemalloc.stop()
