@@ -135,18 +135,18 @@ def dtm_update(test: bool, hints_enabled: bool, query: list) -> None:
     # Compare dtms and descriptions
     for i in query:
         # if type Premium (since there are 2 of them)
-        if i[0] == "Premium":
+        if i[1] == "Premium":
             pass
         # everything else
-        elif i[0] in dtm_import_list:
-            test and print(dtm_import_list[i[0]])
-            if i[1] != dtm_import_list[i[0]]["description"]:
-                dtm_import_list[i[0]]["description"] = i[1]
-                logging.info(f'HINT {__name__}: "{i[0]}" had their description assigned to "{i[1]}".')
+        elif i[1] in dtm_import_list:
+            test and print(dtm_import_list[i[1]])
+            if i[2] != dtm_import_list[i[1]]["description"]:
+                dtm_import_list[i[1]]["description"] = i[2]
+                logging.info(f'HINT {__name__}: "{i[1]}" had their description assigned to "{i[2]}".')
                 alt += 1
-            if i[4] != dtm_import_list[i[0]]["dtm"]:
-                dtm_import_list[i[0]]["dtm"] = i[4]
-                logging.info(f'HINT {__name__}: "{i[0]}" had their dtm assigned to "{i[4]}".')
+            if i[5] != dtm_import_list[i[1]]["dtm"]:
+                dtm_import_list[i[1]]["dtm"] = i[5]
+                logging.info(f'HINT {__name__}: "{i[1]}" had their dtm assigned to "{i[5]}".')
                 alt += 1
         else:
             print('we found something new')
