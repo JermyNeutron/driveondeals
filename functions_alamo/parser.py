@@ -1,13 +1,12 @@
 import sys
-
 sys.path.append(".")
-
 
 # parser
 from datetime import datetime, date, timedelta
 from playwright.sync_api import Page, expect, sync_playwright, TimeoutError
 # from playwright.async_api import Page, expect, async_playwright, TimeoutError
 import tracemalloc
+import time
 
 from functions_alamo.alamo_class import alamo_class
 from functions_alamo.alamo_dtm import dtm_update
@@ -96,6 +95,9 @@ def check_dtm(page: Page):
 
 def lets_class_1(test: bool, hints_enabled: bool, meta_krono: tuple, next_day_meta: tuple, page: Page):
     # div
+    epoch_ident = int(time.time())
+    service_default = "Alamo"
+
     option_element = page.locator('div[class="vehicle-select-details component-theme--light"]')
     option_count = option_element.count()
     option_tuples = []
@@ -165,8 +167,8 @@ def lets_class_1(test: bool, hints_enabled: bool, meta_krono: tuple, next_day_me
         date_rsv_int = int(next_day_meta[0].strftime("%w"))
         adv_rsv = (next_day_meta[0] - meta_krono[0]).days
 
-        service_default = "Alamo"
-        option_tuples.append((service_default,
+        option_tuples.append((epoch_ident,
+                              service_default,
                               type_text,
                               model_text, 
                               pax_text,

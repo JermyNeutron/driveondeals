@@ -1,5 +1,6 @@
 class alamo_class:
     def __init__(self,
+                 epoch_ident: int,
                  service: str,
                  class_type: str,
                  model: str,
@@ -15,6 +16,7 @@ class alamo_class:
                  cost_total: str,
                  ) -> None:
         self.service = service
+        self.epoch_ident = epoch_ident
         self.class_type = class_type # SUV, sedan, minivan, etc
         self.model = model # Vehicle description
         self.pax = pax # passenger capacity

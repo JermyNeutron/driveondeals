@@ -20,6 +20,7 @@ def create_database(test: bool, hints_enabled: bool) -> None:
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS rental_prices (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        epoch_ident INT NOT NULL,
         service TEXT NOT NULL,
         type TEXT NOT NULL,
         model TEXT NOT NULL,
@@ -39,6 +40,7 @@ def create_database(test: bool, hints_enabled: bool) -> None:
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS cheapest_prices(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        epoch_ident INT NOT NULL,
         service TEXT NOT NULL,
         type TEXT NOT NULL,
         model TEXT NOT NULL,
@@ -68,8 +70,8 @@ def db_update(test: bool, hints_enabled: bool, option_tuples_cleaned: list) -> N
 
     for option in option_tuples_cleaned:
         cursor.execute('''
-            INSERT INTO rental_prices (service, type, model, pax, lug, data_dtm_track, date_scr_date, date_scr_int, date_rsv_date, date_rsv_int, adv_rsv, daily, total)
-            Values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+            INSERT INTO rental_prices (epoch_ident, service, type, model, pax, lug, data_dtm_track, date_scr_date, date_scr_int, date_rsv_date, date_rsv_int, adv_rsv, daily, total)
+            Values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
         ''', option)
 
     connection.commit()
@@ -100,9 +102,18 @@ def db_export_rental_prices(test: bool, hints_enabled: bool, service: str) -> No
 if __name__ == "__main__":
     test = True
     hints_enabled = True
+    service = "Alamo"
 
-    create_database(test, hints_enabled)
-    # db_export_rental_prices(test, hints_enabled)
+    while True:
+        choice = input("1) Create database\n2) Export rental_prices table\nEnter Choice: ")
+        if choice == "1":
+            create_database(test, hints_enabled)
+            break
+        elif choice == "2":
+            db_export_rental_prices(test, hints_enabled, service)
+            break
+        else:
+            print(f'{choice} was an invalid choice.\n')
 
 
 """
