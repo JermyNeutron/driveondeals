@@ -19,7 +19,7 @@ def get_instance_timestamp(test: bool, hints_enabled: bool) -> timedelta:
     return datetime.now()
 
 
-def run_alamo(test: bool, hints_enabled: bool, hl_mode: bool, ss_enabled: bool, auto_close: bool, instance_timestamp: timedelta) -> None:
+def run_alamo(test: bool, hints_enabled: bool, hl_mode: bool, ss_enabled: bool, auto_close: bool, instance_timestamp: datetime) -> None:
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=hl_mode)
         context = browser.new_context()
