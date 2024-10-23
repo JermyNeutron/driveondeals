@@ -1,7 +1,7 @@
 # Server Mirror
 
 ## Purpose
-A replicate of the server files maintaining the databse for demonstraton purposes.
+A replicate of the server files maintaining the database for demonstration purposes.
 
 ## Setup
 A basic/free PythonAnywhere account is not capable of running the server, so a paid account of $5.25 is the minimum cost to operate properly ($5 account plus $0.25 of an extra 1gb storage).
