@@ -17,6 +17,8 @@ from functions_gen import file_utils, est_date, suffix, dx1rtn, dx3wknd
 
 tracemalloc.start()
 
+
+# PROBABLY: past certain time, just change to next day as start of rental
 def minimums_rsv(test: bool, hints_enabled: bool, instance_timestamp: datetime, rsv_time: str) -> str:
     minimums_min = 30 # threshold in minutes to extend reservation
 
@@ -262,7 +264,7 @@ def test_basic_search(test: bool, hints_enabled: bool,
         file_utils.verify_folder_path(folder_path)
         screenshot_path = file_utils.get_unique_filename(screenshot_base, folder_path)
 
-        page.screenshot(path=screenshot_path)
+        page.screenshot(path=screenshot_path, full_page=True)
         hints_enabled and print(f"taken and stored at {screenshot_path}. {checkmark}")
     else:
         hints_enabled and print(f"HINT {__name__}: Step 17: {find_time()}: # Screenshot disabled per {{ss_enabled}} {xmark}")
