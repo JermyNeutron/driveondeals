@@ -3,7 +3,7 @@ scratch/
 test/**/*_test*
 functions_alamo/*_test*
 *_logs.txt
-*.csv*
+test/**/*.csv*
 
 # Database
 rental_data.db
