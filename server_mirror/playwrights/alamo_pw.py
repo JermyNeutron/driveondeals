@@ -9,12 +9,10 @@ import sys
 
 from playwright.sync_api import Page, expect, sync_playwright
 
-from ..functions import import_logging
+from ..functions import alamo_dtm, database_func, import_logging, period_iterations
+
 import_logging.main("exports/logging_export.txt")
 
-# # STILL NEED IMPLEMENTED:
-# needs parser
-#  dx1rtn, dx3wknd
 
 # Return suffix with date, i.e., 24th
 def suffix(date_day: str) -> str:
@@ -29,7 +27,6 @@ def suffix(date_day: str) -> str:
         mod_day += "rd"
     else:
         mod_day += "th"
-    hints_enabled and print(f"HINT {__name__}: {date_day} returned as {mod_day}")
     return mod_day
 
 
@@ -53,7 +50,7 @@ def minimums_rsv(test: bool, hints_enabled: bool, instance_timestamp: datetime, 
 def main(test: bool, hints_enabled: bool, instance_timestamp: datetime, page: Page) -> None:
     # PARAMS
     param_timeout_1 = 1000 # VERIFIED timeout for initial pop-up
-    param_timeout_2 = 1000 # Timeout succeeding reservation start
+    param_timeout_2 = 1000 # general purpose
     param_timeout_gen_want = 5000
     test_pu_location = "SNA"
     checkmark = "\u2713"
@@ -113,11 +110,156 @@ def main(test: bool, hints_enabled: bool, instance_timestamp: datetime, page: Pa
         logging.error(f"{__name__}: Next available time unable to be selected: {e}")
     # 12: Default Return Date Search
     # Aria-label format: "Choose Saturday, October 12th, 2024"
-    
+    next_date_meta = period_iterations.dx1rtn(test, hints_enabled, instance_timestamp)
+    aria_label_do_date = f'Choose {next_date_meta.strftime("%A")}, {next_date_meta.strftime("%B")} {suffix(next_date_meta.strftime("%d"))}, {next_date_meta.strftime("%Y")}'
+    next_date_to_select = page.locator(f'div[role="button"][aria-label="{aria_label_do_date}"]')
+    # 13: Drop Off Check Date Visibility
+    try:
+        expect(next_date_to_select).to_be_visible()
+    except Exception as e:
+        logging.debug(f"{__name__}: Drop off date was not visible. Attempting to click box.")
+        page.get_by_role("button", name="Return Date required").click()
+        expect(next_date_to_select).to_be_visible()
+    # 14: Drop Off Date Click
+    try:
+        next_date_to_select.click()
+    except Exception as e:
+        logging.error(f"{__name__}: Unable to click Drop Off date: {e}")
+    # 15: Return Next Available Time Search, trying to keep same return time as pick up
+    aria_label_do_time = next_option_time.get_attribute('data-value')
+    next_option_do = f"returnTime_{aria_label_do_time}"
+    date_to_select = page.locator(f'li[role="option"][id="{next_option_do}]')
+    expect(date_to_select).to_be_visible()
+    # 16: Drop Off Time Click
+    date_to_select.click()
 
+    # 17: Variable Is Driver 25+?
+    logging.debug(f"{__name__}: Still need variability if driver is above 25 years old")
+
+    # 18: click on Go
+    go_button = page.locator(f'button[class="button button-go"][type="submit"][aria-label="Go"]')
+    expect(go_button).to_be_visible()
+    go_button.click()
+    page.wait_for_timeout(param_timeout_2)
+
+
+    ###
+    ### PARSER
+    ###
+
+
+    epoch_ident = int(time.time())
+    service_default = "Alamo"
+
+    option_element = page.locator('div[class="vehicle-select-details component-theme--light"]')
+    option_count = option_element.count()
+    option_tuples = []
+    for i in range(option_count):
+        # type
+        element_type = option_element.nth(i).locator('h3[class="vehicle-select-details__header"]')
+        type_text = element_type.inner_text()
+   
+        # model
+        element_model = option_element.nth(i).locator('p[class="vehicle-select-details__make-model"]')
+        model_text = element_model.inner_text()
+   
+        # # pax
+        try:
+            element_pax = option_element.nth(i).locator('li[class="vehicle-details-icon-list__icon vehicle-details-icon-list__icon--passenger"]')
+            
+            pax_full = element_pax.text_content(timeout=param_timeout_2)
+            pax_span = element_pax.locator('span[class="vehicle-details-icon-list__icon--sr-only"]').text_content(timeout=param_timeout_2)
+            pax_text = pax_full.replace(pax_span, "").strip()
+        except TimeoutError as te:
+            logging.debug(f'{__name__}: timeout exception made for {type_text}: {te}')
+            pax_text = None
+        except Exception as e:
+            logging.warning(f'{__name__}: unexpected exception made for {type_text}: {e}')
+            pax_text = None
+            
+        # # lug
+        try:
+            element_lug = option_element.nth(i).locator('li[class="vehicle-details-icon-list__icon vehicle-details-icon-list__icon--suitcase"]')
+            lug_full = element_lug.text_content(timeout=param_timeout_2)
+            lug_span = element_lug.locator('span[class="vehicle-details-icon-list__icon--sr-only"]').text_content(timeout=param_timeout_2)
+            lug_text = lug_full.replace(lug_span, "").strip()
+        except TimeoutError as te:
+            logging.debug(f'timeout exception made for {type_text}: {te}')
+            lug_text = None
+        except Exception as e:
+            logging.warning(f'unexpected exception made for {type_text}: {e}')
+            lug_text = None
+
+        # # data_dtm_track
+        dtm_att = "car_class|pay_later|"
+        button_frmt = "data_dtm_track"
+        button_dtm = option_element.nth(i).locator(f'button[data_dtm_track^="{dtm_att}"]')
+        if button_dtm.count() == 0:
+            button_frmt = "data-dtm-track"
+            button_dtm = option_element.nth(i).locator(f'button[data-dtm-track^="{dtm_att}"]')
+        dtm_value = button_dtm.get_attribute(button_frmt).replace(dtm_att, "").strip()
+
+        # # daily $
+        element_daily = option_element.nth(i).locator('p[class="vehicle-price-component__charge"]')
+        daily_full = element_daily.text_content()
+        daily_span1 = element_daily.locator('span[class="vehicle-price-component__pay-symbol"]').text_content()
+        daily_span2 = element_daily.locator('span[class="vehicle-price-component__total-text vehicle-price-component__rate-text"]').text_content()
+        daily_text = daily_full.replace(daily_span1, "").replace(daily_span2, "").strip()
+    
+        # # total $
+        element_total = option_element.nth(i).locator('p[class="vehicle-price-component__charge vehicle-price-component__charge--secondary"]')
+        total_full = element_total.text_content()
+        total_span1 = element_total.locator('span[class="vehicle-price-component__pay-symbol"]').text_content()
+        total_span2 = element_total.locator('span[class="vehicle-price-component__total-text"]').text_content()
+        total_text = total_full.replace(total_span1, "").replace(total_span2, "").strip()
+        
+        # # Datetime calcutions
+        date_scr_date = instance_timestamp.strftime("%Y-%m-%d")
+        date_scr_int = int(instance_timestamp.strftime("%w"))
+        date_rsv_date = next_date_meta.strftime("%Y-%m-%d")
+        date_rsv_int = int(next_date_meta.strftime("%w"))
+        adv_rsv = (next_date_meta - instance_timestamp).days
+
+        option_tuples.append((epoch_ident,
+                              service_default,
+                              type_text,
+                              model_text, 
+                              pax_text,
+                              lug_text, 
+                              dtm_value,
+                              date_scr_date,
+                              date_scr_int,
+                              date_rsv_date,
+                              date_rsv_int,
+                              adv_rsv,
+                              daily_text,
+                              total_text))
+
+
+    option_tuples_cleaned = []
+    option_tuples_dup = set()
+    for option in option_tuples:
+        if option not in option_tuples_dup:
+            option_tuples_cleaned.append(option)
+            option_tuples_dup.add(option)
+
+    # write to txt for testing
+    with open("functions_alamo/example_tuples_test.txt", "w") as file:
+        for i in option_tuples_cleaned:
+            file.write(f"{i}\n")
+
+    # auto update to populate known dtm trackers
+    alamo_dtm.dtm_update(False, hints_enabled, option_tuples_cleaned)
+
+    # add entries to database
+    database_func.db_update(test, hints_enabled, option_tuples_cleaned)
+
+    # export updated database to temp csv
+    # test csv path: 'test/rental_prices_export_alamo.csv'
+    # actual csv path: 'temp/rental_prices_export_alamo.csv'
+    database_func.db_export_rental_prices(test, hints_enabled, service_default)
+
+# SCREENSHOTS??
 
 if __name__ == "__main__":
-    test = True
-    hints_enabled = True
-
-    main(test, hints_enabled)
+    pass
