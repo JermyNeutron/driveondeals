@@ -13,7 +13,7 @@ def main(test: bool, hints_enabled: bool, date_day: str) -> str:
     Returns:
         mod_day (str): e.g. "23rd"
     """
-    mod_day = date_day
+    mod_day = str(int(date_day))
     if int(date_day) < 1 or int(date_day) > 31:
         hints_enabled and print(f"HINT {__name__}: invalid day entered.")
         pass # possible change return value
