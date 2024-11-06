@@ -106,7 +106,7 @@ def test_basic_search(test: bool, hints_enabled: bool,
     # Aria-label format: "Choose Saturday, October 12th, 2024"
     hints_enabled and print(f"HINT {__name__}: Step 7: {find_time()}: # Assign Current Date As Pick Up", end=" ")
     aria_label_pu = f"Choose {meta_krono[0].strftime('%A')}, {meta_krono[0].strftime('%B')} {meta_krono[1]}, {meta_krono[0].strftime('%Y')}"
-    date_to_select = page.locator(f'div[role="button"][aria-label="{aria_label_pu}"]')
+    date_to_select = page.locator(f'div[role="button"][aria-label="{aria_label_pu}"]').first
     hints_enabled and print(f"{checkmark}\nHINT {__name__}: Step 7 (result): aria-label assigned {date_to_select} {checkmark}")
 
     # 8: Check Date Visibility
@@ -166,7 +166,7 @@ def test_basic_search(test: bool, hints_enabled: bool,
     # variable, insert option to determine dx1rtn vs dx3rtn
     next_day_meta = dx1rtn.main_simp(test, hints_enabled, meta_krono[0])
     aria_label_do_date = f"Choose {next_day_meta[0].strftime('%A')}, {next_day_meta[0].strftime('%B')} {next_day_meta[1]}, {next_day_meta[0].strftime('%Y')}"
-    next_date_to_select = page.locator(f'div[role="button"][aria-label="{aria_label_do_date}"]')
+    next_date_to_select = page.locator(f'div[role="button"][aria-label="{aria_label_do_date}"]').first
     hints_enabled and print(f"HINT {__name__}: Step 12 (result): {find_time()}: aria-label assigned {next_date_to_select} {checkmark}")
     
     # 13: Drop Off Check Date Visibility
@@ -213,13 +213,8 @@ def test_basic_search(test: bool, hints_enabled: bool,
     hints_enabled and print("READY", end=" ... ")
     go_button.click()
     hints_enabled and print(f"CLICKED {checkmark}")
-    page.wait_for_timeout(param_timeout_2)
-    print(f"waited {param_timeout_2}")
-
-    
-    # TEST TEST
-    page.wait_for_timeout(param_timeout_gen_wait)
-    print(f"waited {param_timeout_gen_wait/1000}s...")
+    page.wait_for_load_state("networkidle")
+    hints_enabled and print(f"HINT {__name__}: waited for 'networkidle'")
 
 
     # importing parser lets class 1
@@ -227,13 +222,6 @@ def test_basic_search(test: bool, hints_enabled: bool,
         parser.lets_class_1(test, hints_enabled, meta_krono, next_day_meta, page)
     except Exception as e:
         print(e)
-
-    """
-    STEPS Remaining*
-    Minimum future time reservation | probably 30 minutes
-    Create database
-
-    """
 
     
     # Screenshot
