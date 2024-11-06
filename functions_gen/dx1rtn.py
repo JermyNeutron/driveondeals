@@ -58,7 +58,9 @@ def main(test: bool, hints_enabled: bool, date_pointer: datetime = "DEFAULT") ->
     date_current_year = next_day_datetime.strftime("%Y")
     rtn_tuple.append(date_current_year)
 
-    hints_enabled and print(f"HINT {__name__}: Returning newly created DEFAULT datetime tuple for NEXT day: {next_day_datetime} {checkmark}")
+    if hints_enabled:
+        print(f"HINT {__name__}: Returning newly created DEFAULT datetime tuple for NEXT day: {next_day_datetime} {checkmark}")
+        print(f"HINT {__name__}: DEFAULT tuple contains: {rtn_tuple}")
     return tuple(rtn_tuple)
 
 
@@ -85,7 +87,9 @@ def main_simp(test: bool, hints_enabled: bool, date_pointer: datetime = "DEFAULT
     next_day_suffix = suffix.main(test, hints_enabled, next_day_datetime.strftime("%d"))
     rtn_tuple.append(next_day_suffix)
     
-    hints_enabled and print(f"HINT {__name__}: Returning newly created SIMPLE datetime tuple for NEXT day: {next_day_datetime} {checkmark}")
+    if hints_enabled:
+        print(f"HINT {__name__}: Returning newly created SIMPLE datetime tuple for NEXT day: {next_day_datetime} {checkmark}")
+        print(f"HINT {__name__}: SIMPLE tuple contains: {rtn_tuple}")
     return tuple(rtn_tuple)
 
 
