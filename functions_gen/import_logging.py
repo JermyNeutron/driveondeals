@@ -19,3 +19,7 @@ def set_logging(filepath: str) -> None:
             logging.StreamHandler()
         ]
     )
+
+
+if __name__ == "__main__":
+    pass
