@@ -7,6 +7,7 @@ def main(filepath: str) -> None:
         format='%(asctime)s - %(levelname)s - %(message)s',
         handlers=[
             logging.FileHandler(f"{filepath}"),
+            # logging.StreamHandler() # Optional log printing into terminal
         ]
     )
 
