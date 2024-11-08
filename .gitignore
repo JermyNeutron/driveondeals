@@ -7,6 +7,7 @@ test/**/*.csv*
 
 # Database
 rental_data.db
+test_data.db
 
 # Cache
 .DS_Store
