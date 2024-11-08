@@ -8,15 +8,15 @@ def create_database(test: bool, hints_enabled: bool) -> None:
     Creates and establishes database connection
 
     Args:
-        test (bool)
-        hints_enabled (bool)
+        test (bool): Switches between rental_data.db and test_data.db
+        hints_enabled (bool):
 
     Returns:
-        None
+        None:
     """
-
-    connection = sqlite3.connect('rental_data.db')
-    hints_enabled and print(f'HINT {__name__}: rental_data.db accessed.')
+    data_path = '../rental_data.db' if not test else '../test_data.db'
+    connection = sqlite3.connect(data_path) if not test else sqlite3.connect(data_path)
+    hints_enabled and print(f'HINT {__name__}: {data_path} accessed.')
     cursor = connection.cursor()
 
     cursor.execute('''
@@ -62,12 +62,13 @@ def create_database(test: bool, hints_enabled: bool) -> None:
     connection.commit()
 
     connection.close()
-    hints_enabled and print(f'HINT {__name__}: rental_data.db closed.')
+    hints_enabled and print(f'HINT {__name__}: {data_path} closed.')
 
 
 def db_update(test: bool, hints_enabled: bool, option_tuples_cleaned: list) -> None:
-    connection = sqlite3.connect('rental_data.db')
-    hints_enabled and print(f'HINT {__name__}: rental_data.db accessed.')
+    data_path = '../rental_data.db' if not test else '../test_data.db'
+    connection = sqlite3.connect(data_path)
+    hints_enabled and print(f'HINT {__name__}: {data_path} accessed.')
     cursor = connection.cursor()
 
     for option in option_tuples_cleaned:
@@ -81,7 +82,8 @@ def db_update(test: bool, hints_enabled: bool, option_tuples_cleaned: list) -> N
 
 
 def db_export_rental_prices(test: bool, hints_enabled: bool, service: str) -> None:
-    connection = sqlite3.connect('rental_data.db')
+    data_path = '../rental_data.db' if not test else '../test_data.db'
+    connection = sqlite3.connect(data_path)
     cursor = connection.cursor()
 
     # specific folder
@@ -91,7 +93,7 @@ def db_export_rental_prices(test: bool, hints_enabled: bool, service: str) -> No
 
     column_names = [description[0] for description in cursor.description]
 
-    export_path = f'exports/rental_prices_export_{service}.csv'
+    export_path = f'../exports/{data_path[3:-3]}_export_{service}.csv'
     with open(export_path, mode='w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(column_names)
@@ -102,12 +104,20 @@ def db_export_rental_prices(test: bool, hints_enabled: bool, service: str) -> No
 
 
 if __name__ == "__main__":
-    test = True
+    choice1 = int(input('Enter bool for test: 1) True and 2) False: '))
+    print(type(choice1))
+
+    if choice1 == 1:
+        test = True
+    elif choice1 == 2:
+        test = False
     hints_enabled = True
+
+    data_path = '../rental_data.db' if not test else '../test_data.db'
     service = "Alamo"
 
     while True:
-        choice = input("1) Create database\n2) Export rental_prices table\nEnter Choice: ")
+        choice = input(f"1) Create database\n2) Export {data_path} table\nEnter Choice: ")
         if choice == "1":
             create_database(test, hints_enabled)
             break
