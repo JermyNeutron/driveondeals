@@ -49,12 +49,12 @@ def run_enterprise(test: bool, hints_enabled: bool, instance_timestamp: datetime
         browser = p.chromium.launch()
         context = browser.new_context()
         page = context.new_page()
-        hints_enabled and print(f"{__name__}: Enterprise scrape commencing...")
+        hints_enabled and print(f"HINT: {__name__}: Enterprise scrape commencing...")
         main_logger.info(f"{__name__}: Enterprise scrape commencing...")
         # INSERT enterprise playwright script here
         context.close()
         browser.close()
-        hints_enabled and print(f"{__name__}: Enterprise scrape is closing appropriately...")
+        hints_enabled and print(f"HINT: {__name__}: Enterprise scrape is closing appropriately...")
         main_logger.info(f"{__name__}: Enterprise scrape is closing appropriately...")
 
 
@@ -63,19 +63,16 @@ def main(public: bool) -> None:
     hints_enabled = True if not public else False
 
     instance_timestamp = get_instance_timestamp(test, hints_enabled)
-    hints_enabled and print(f"HINT: {__name__}: Program is waking up...")
-    main_logger.info(f"{__name__}Program is waking up...")
+    main_logger.info(f"{__name__}: Program is waking up...")
     ### NEED period_iteration list, accepts arguments as functions?
 
     # Running Playwrights
     try:
         run_alamo(test, hints_enabled, instance_timestamp)
     except Exception as e:
-        hints_enabled and print(f"HINT: {__name__}: run_alamo() encountered an error!")
         main_logger.critical(f"{__name__}: run_alamo() encountered an error!")
 
     # End Program
-    hints_enabled and print(f"HINT: {__name__}: Program is going to sleep.")
     main_logger.info(f"{__name__}: Program is going to sleep...\n")
 
 
