@@ -17,9 +17,12 @@ def main(filepath: str, logger_name: str = None) -> logging.Logger:
         ("../exports/logging_export.txt", "main_logger")
     To set up the logger:
         my_logger = main(filepath, "my_logger")
-        
-    The variable and 2nd function argument should remain the same for ease of referencing.
+
+    The variable and 3rd function argument should remain the same for ease of referencing.
     """
+        # # Tried testing passing boolean to enable StreamHandler, faced issues
+        # en_stream (bool): enables StreamHandler (not in use)
+
     # Create or get the specified logger
     logger = logging.getLogger(logger_name)
     logger.setLevel(logging.DEBUG)
@@ -39,8 +42,19 @@ def main(filepath: str, logger_name: str = None) -> logging.Logger:
     # Add file handler to logger
     logger.addHandler(file_handler)
 
+    # # Enable StreamHandler if hints_enabled:
+    # if en_stream:
+    #     stream_handler = logging.StreamHandler()
+    #     stream_handler.setLevel(logging.DEBUG)
+    #     stream_handler.setFormatter(formatter)
+    #     logger.addHandler(stream_handler)
+
     return logger
 
 
 if __name__ == "__main__":
-    testlogger = main()
+    # try/except added to test docstrings
+    try:
+        testlogger = main()
+    except:
+        pass

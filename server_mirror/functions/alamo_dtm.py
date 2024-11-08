@@ -53,7 +53,7 @@ def dtm_update(test: bool, hints_enabled: bool, query: list) -> None:
             json.dump(dtm_import_list, f, indent=4)
 
 
-def logging_test():
+def logging_test() -> None:
     """Tests logging output to '../resources/alamo_dtm_logs.txt'"""
     dtm_logger.info(f"{__name__}: dtm_logger made from alamo_dtm")
 
