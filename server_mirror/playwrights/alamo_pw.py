@@ -302,8 +302,8 @@ def main(test: bool, hints_enabled: bool, instance_timestamp: datetime, page: Pa
         for i in option_tuples_cleaned:
             file.write(f"{i}\n")
 
-    # # auto update to populate known dtm trackers
-    # alamo_dtm.dtm_update(False, hints_enabled, option_tuples_cleaned)
+    # auto update to populate known dtm trackers
+    alamo_dtm.dtm_update(False, hints_enabled, option_tuples_cleaned)
 
     # # add entries to database
     # database_func.db_update(test, hints_enabled, option_tuples_cleaned)
