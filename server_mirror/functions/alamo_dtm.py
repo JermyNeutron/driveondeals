@@ -12,12 +12,12 @@ def dtm_update(test: bool, hints_enabled: bool, query: list) -> None:
     Compares and updates alamo_dtm.json with alamo classes.
 
     Parameters:
-        test (bool)
-        hints_enabled (bool)
-        query (list)
+        test (bool): No application yet.
+        hints_enabled (bool):
+        query (list): [('Midsize SUV', 'Nissan Rogue or similar', '5', '4', 'IFAR', '70.00', '88.30'), ...,]
 
     Returns:
-        None
+        None:
     """
 
     # Load alamo dtm's
@@ -64,4 +64,5 @@ if __name__ == "__main__":
 
     logging_test()
 
+    # myvar = None
     # dtm_update(test, hints_enabled, myvar)
