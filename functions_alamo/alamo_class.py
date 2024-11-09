@@ -14,6 +14,7 @@ class alamo_class:
                  adv_rsv: int,
                  cost_daily: str,
                  cost_total: str,
+                 unlimited: bool,
                  ) -> None:
         self.service = service
         self.epoch_ident = epoch_ident
@@ -29,6 +30,7 @@ class alamo_class:
         self.data_dtm_track = data_dtm_track # css attribute
         self.cost_daily = float(cost_daily)
         self.cost_total = float(cost_total)
+        self.is_unlimited = unlimited
 
 
 if __name__ == "__main__":

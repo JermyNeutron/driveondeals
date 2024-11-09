@@ -12,9 +12,9 @@ def create_database(test: bool, hints_enabled: bool) -> None:
     Returns:
         None
     """
-
-    connection = sqlite3.connect('rental_data.db')
-    hints_enabled and print(f'HINT {__name__}: rental_data.db accessed.')
+    data_path = 'rental_data.db' if not test else 'test_data.db'
+    connection = sqlite3.connect(data_path)
+    hints_enabled and print(f'HINT {__name__}: {data_path} accessed.')
     cursor = connection.cursor()
 
     cursor.execute('''
@@ -33,7 +33,8 @@ def create_database(test: bool, hints_enabled: bool) -> None:
         date_rsv_int INTEGER NOT NULL,
         adv_rsv INTEGER NOT NULL, 
         daily REAL NOT NUll,
-        total REAL NOT NULL    
+        total REAL NOT NULL,
+        unlimited INTEGER NOT NULL
     )
     ''')
 
@@ -53,25 +54,29 @@ def create_database(test: bool, hints_enabled: bool) -> None:
         date_rsv_int INTEGER NOT NULL,
         adv_rsv INTEGER NOT NULL, 
         daily REAL NOT NUll,
-        total REAL NOT NULL 
+        total REAL NOT NULL,
+        unlimited INTEGER NOT NULL
     )
     ''')
 
     connection.commit()
 
     connection.close()
-    hints_enabled and print(f'HINT {__name__}: rental_data.db closed.')
+    hints_enabled and print(f'HINT {__name__}: {data_path} closed.')
 
 
 def db_update(test: bool, hints_enabled: bool, option_tuples_cleaned: list) -> None:
-    connection = sqlite3.connect('rental_data.db')
-    hints_enabled and print(f'HINT {__name__}: rental_data.db accessed.')
+    data_path = 'rental_data.db' if not test else 'test_data.db'
+    connection = sqlite3.connect(data_path)
+    hints_enabled and print(f'HINT {__name__}: {data_path} accessed.')
     cursor = connection.cursor()
 
     for option in option_tuples_cleaned:
+        option = (*option[:-1], int(option[-1])) # rebuilds tuple with converted boolean into integer
+
         cursor.execute('''
-            INSERT INTO rental_prices (epoch_ident, service, type, model, pax, lug, data_dtm_track, date_scr_date, date_scr_int, date_rsv_date, date_rsv_int, adv_rsv, daily, total)
-            Values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+            INSERT INTO rental_prices (epoch_ident, service, type, model, pax, lug, data_dtm_track, date_scr_date, date_scr_int, date_rsv_date, date_rsv_int, adv_rsv, daily, total, unlimited)
+            Values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
         ''', option)
 
     connection.commit()
@@ -79,7 +84,8 @@ def db_update(test: bool, hints_enabled: bool, option_tuples_cleaned: list) -> N
 
 
 def db_export_rental_prices(test: bool, hints_enabled: bool, service: str) -> None:
-    connection = sqlite3.connect('rental_data.db')
+    data_path = 'rental_data.db' if not test else 'test_data.db'
+    connection = sqlite3.connect(data_path)
     cursor = connection.cursor()
 
     # specific folder
