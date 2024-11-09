@@ -14,7 +14,7 @@ def dtm_update(test: bool, hints_enabled: bool, query: list) -> None:
     Parameters:
         test (bool): No application yet.
         hints_enabled (bool):
-        query (list): [('Midsize SUV', 'Nissan Rogue or similar', '5', '4', 'IFAR', '70.00', '88.30'), ...,]
+        query (list): ['Midsize Luxury SUV', 'Mercedes GLE, BMW X5 or similar', '5', '4', 'UDAR', '2024-11-09', 6, '2024-11-10', 0, 1, '299.00', '371.87', True), ...,]
 
     Returns:
         None:
