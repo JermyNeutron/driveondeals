@@ -213,8 +213,11 @@ def test_basic_search(test: bool, hints_enabled: bool,
     hints_enabled and print("READY", end=" ... ")
     go_button.click()
     hints_enabled and print(f"CLICKED {checkmark}")
-    page.wait_for_load_state("networkidle")
-    hints_enabled and print(f"HINT {__name__}: waited for 'networkidle'")
+
+    # Checks if results page has loaded
+    results_page = page.locator('h1[class="title__heading-text"]')
+    results_page.wait_for()
+    hints_enabled and print(f"HINT {__name__}: Results page reached.")
 
 
     # importing parser lets class 1
