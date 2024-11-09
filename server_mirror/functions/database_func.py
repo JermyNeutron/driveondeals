@@ -33,9 +33,10 @@ def create_database(test: bool, hints_enabled: bool) -> None:
         date_scr_int INTEGER NOT NULL,
         date_rsv_date TEXT NOT NULL,
         date_rsv_int INTEGER NOT NULL,
-        adv_rsv INTEGER NOT NULL, 
+        adv_rsv INTEGER NOT NULL,
         daily REAL NOT NUll,
-        total REAL NOT NULL    
+        total REAL NOT NULL,
+        unlimited INTEGER NOT NULL
     )
     ''')
 
@@ -53,9 +54,10 @@ def create_database(test: bool, hints_enabled: bool) -> None:
         date_scr_int INTEGER NOT NULL,
         date_rsv_date TEXT NOT NULL,
         date_rsv_int INTEGER NOT NULL,
-        adv_rsv INTEGER NOT NULL, 
+        adv_rsv INTEGER NOT NULL,
         daily REAL NOT NUll,
-        total REAL NOT NULL 
+        total REAL NOT NULL,
+        unlimited INTEGER NOT NULL
     )
     ''')
 
@@ -73,8 +75,8 @@ def db_update(test: bool, hints_enabled: bool, option_tuples_cleaned: list) -> N
 
     for option in option_tuples_cleaned:
         cursor.execute('''
-            INSERT INTO rental_prices (epoch_ident, service, type, model, pax, lug, data_dtm_track, date_scr_date, date_scr_int, date_rsv_date, date_rsv_int, adv_rsv, daily, total)
-            Values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+            INSERT INTO rental_prices (epoch_ident, service, type, model, pax, lug, data_dtm_track, date_scr_date, date_scr_int, date_rsv_date, date_rsv_int, adv_rsv, daily, total, unlimited)
+            Values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
         ''', option)
 
     connection.commit()
