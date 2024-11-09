@@ -93,6 +93,50 @@ def check_dtm(page: Page):
         print("everything was found")
 
 
+def check_mileage(page: Page):
+    option_element = page.locator('div[class="vehicle-select-details component-theme--light"]')
+    option_tuples = []
+
+    for i in range(option_element.count()):
+        h3_element = option_element.nth(i).locator('h3[class="vehicle-select-details__header"]')
+        h3_text = h3_element.inner_text()
+
+        print(h3_text)
+
+        dropdown_button = option_element.nth(i).locator('button[type="button"][aria-label="Features and Price Details"]').click()
+        page.wait_for_load_state("networkidle")
+        # page.wait_for_timeout(3000)
+
+        page.wait_for_selector('div[class="vehicle-select-expanded-details"]', state="visible", timeout=5000)
+        print('done waiting')
+        mileage = option_element.nth(i).locator('div[class="vehicle-select-expanded-details"]')
+        print(mileage)
+
+        if mileage.is_visible():
+            print("expanded section is visible")
+        else:
+            print("mileage is not visible")
+        # try:
+        #     element_mileage = option_element.nth(i).locator('div[class="vehicle-select-expanded-details"]')
+        #     print(f'I found {element_mileage}')
+        #     try:
+        #         mileage_section = element_mileage.inner_text()
+        #         print(f'i found this: {mileage_section}')
+        #     except Exception as e:
+        #         print(e)
+        # except Exception as e:
+        #     print(e)
+
+        option_tuples.append(h3_text)
+        # option_tuples.append((h3_text, mileage_section))
+        break
+
+
+    print(option_tuples)
+    # for h3, mileage in option_tuples:
+        # print(f"h3: {h3}, is_unlimited: {mileage}")
+
+
 def lets_class_1(test: bool, hints_enabled: bool, meta_krono: tuple, next_day_meta: tuple, page: Page):
     # div
     epoch_ident = int(time.time())
@@ -159,6 +203,11 @@ def lets_class_1(test: bool, hints_enabled: bool, meta_krono: tuple, next_day_me
         total_span1 = element_total.locator('span[class="vehicle-price-component__pay-symbol"]').text_content()
         total_span2 = element_total.locator('span[class="vehicle-price-component__total-text"]').text_content()
         total_text = total_full.replace(total_span1, "").replace(total_span2, "").strip()
+
+        # # unlimited miles
+        # element_miles = option_element.nth(i).locator('div[class="vehicle-select-expanded-details__mileage-copy"]')
+        # is_unlimited = element_miles.text_content()
+        # print(f"HINT: option's unlimited miles is {is_unlimited}")
         
         # # Datetime calcutions
         date_scr_date = meta_krono[0].strftime("%Y-%m-%d")
@@ -180,7 +229,8 @@ def lets_class_1(test: bool, hints_enabled: bool, meta_krono: tuple, next_day_me
                               date_rsv_int,
                               adv_rsv,
                               daily_text,
-                              total_text))
+                              total_text,
+                              True)) # Alamo expanded section inconsistent
 
 
     option_tuples_cleaned = []
@@ -190,10 +240,15 @@ def lets_class_1(test: bool, hints_enabled: bool, meta_krono: tuple, next_day_me
             option_tuples_cleaned.append(option)
             option_tuples_dup.add(option)
 
-    # write to txt for testing
-    with open("functions_alamo/example_tuples_test.txt", "w") as file:
-        for i in option_tuples_cleaned:
-            file.write(f"{i}\n")
+
+    for i in option_tuples_cleaned:
+        print(i)
+
+
+    # # write to txt for testing
+    # with open("functions_alamo/example_tuples_test.txt", "w") as file:
+    #     for i in option_tuples_cleaned:
+    #         file.write(f"{i}\n")
 
     # auto update to populate known dtm trackers
     dtm_update(False, hints_enabled, option_tuples_cleaned)
