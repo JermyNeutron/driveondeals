@@ -14,7 +14,7 @@ def create_database(test: bool, hints_enabled: bool) -> None:
     Returns:
         None:
     """
-    data_path = '../rental_data.db' if not test else '../test_data.db'
+    data_path = 'rental_data.db' if not test else 'test_data.db'
     connection = sqlite3.connect(data_path) if not test else sqlite3.connect(data_path)
     hints_enabled and print(f'HINT {__name__}: {data_path} accessed.')
     cursor = connection.cursor()
@@ -68,7 +68,7 @@ def create_database(test: bool, hints_enabled: bool) -> None:
 
 
 def db_update(test: bool, hints_enabled: bool, option_tuples_cleaned: list) -> None:
-    data_path = '../rental_data.db' if not test else '../test_data.db'
+    data_path = 'rental_data.db' if not test else 'test_data.db'
     connection = sqlite3.connect(data_path)
     hints_enabled and print(f'HINT {__name__}: {data_path} accessed.')
     cursor = connection.cursor()
@@ -84,7 +84,7 @@ def db_update(test: bool, hints_enabled: bool, option_tuples_cleaned: list) -> N
 
 
 def db_export_rental_prices(test: bool, hints_enabled: bool, service: str) -> None:
-    data_path = '../rental_data.db' if not test else '../test_data.db'
+    data_path = 'rental_data.db' if not test else 'test_data.db'
     connection = sqlite3.connect(data_path)
     cursor = connection.cursor()
 
@@ -95,7 +95,7 @@ def db_export_rental_prices(test: bool, hints_enabled: bool, service: str) -> No
 
     column_names = [description[0] for description in cursor.description]
 
-    export_path = f'../exports/{data_path[3:-3]}_export_{service}.csv'
+    export_path = f'exports/{data_path[3:-3]}_export_{service}.csv'
     with open(export_path, mode='w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(column_names)
@@ -115,7 +115,7 @@ if __name__ == "__main__":
         test = False
     hints_enabled = True
 
-    data_path = '../rental_data.db' if not test else '../test_data.db'
+    data_path = 'rental_data.db' if not test else 'test_data.db'
     service = "Alamo"
 
     while True:
@@ -138,7 +138,7 @@ Things I want to know:
 - which day on average was the chepeast 1 day rental
 - which weekend had the cheapest rental
 - each service's cheapest rental for each type
-- 
+-
 
 # example of how to iterate each of objects to place into the database
 # Insert each tuple into the database

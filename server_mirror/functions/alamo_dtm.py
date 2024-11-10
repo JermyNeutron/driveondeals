@@ -4,7 +4,7 @@ import json
 
 from functions import import_logging
 
-dtm_logger = import_logging.main("../resources/alamo_dtm_logs.txt", "dtm_logger")
+dtm_logger = import_logging.main("resources/alamo_dtm_logs.txt", "dtm_logger")
 
 
 def dtm_update(test: bool, hints_enabled: bool, query: list) -> None:
@@ -21,7 +21,7 @@ def dtm_update(test: bool, hints_enabled: bool, query: list) -> None:
     """
 
     # Load alamo dtm's
-    with open("../resources/alamo_dtm.json", "r") as file:
+    with open("resources/alamo_dtm.json", "r") as file:
         dtm_import_list = json.load(file)
 
     # Counter for any changes made for json file.
@@ -44,13 +44,16 @@ def dtm_update(test: bool, hints_enabled: bool, query: list) -> None:
                 alt += 1
         else:
             print(f'we found something new: {i[2]}')
+            dtm_logger.warning(f'{__name__}: we found something new: {i[2]}')
 
     if alt == 0:
         hints_enabled and print(f"HINT {__name__}: dtm's in alamo_dtm.json are up to date.")
+        dtm_logger.info("dtm's in alamo_dtm.json are up to date.")
     # write to json file
     else:
-        with open("../resources/alamo_dtm.json", "w") as f:
+        with open("resources/alamo_dtm.json", "w") as f:
             json.dump(dtm_import_list, f, indent=4)
+        dtm_logger.info(f"{__name__}Changes were saved.")
 
 
 def logging_test() -> None:
