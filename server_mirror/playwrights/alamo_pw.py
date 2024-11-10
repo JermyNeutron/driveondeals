@@ -6,7 +6,7 @@ import time
 
 from playwright.sync_api import Page, expect, sync_playwright
 
-from functions import alamo_dtm, database_func, import_logging, period_iterations
+from functions import alamo_dtm, database_func, file_utils, import_logging, period_iterations
 
 main_logger = import_logging.main("../exports/logging_export.txt", "main_logger")
 
@@ -37,6 +37,18 @@ def suffix(date_day: str) -> str:
 
 
 def minimums_rsv(test: bool, hints_enabled: bool, instance_timestamp: datetime, rsv_time: str) -> str:
+    """
+    Checks if timestamp is safely outside minimum threshold for making a reservation before experiencing booking issues.
+    
+    Parameters:
+        test (bool):
+        hints_enabled (bool):
+        instance_timestamp (datetime):
+        rsv_time (str): '10:11'
+        
+    Returns:
+        rsv_time_str (str): '10:30'
+    """
     minimums_min = 30 # Variable, threshold in minutes to extend reservation
 
     rsv_time_str = rsv_time
@@ -98,7 +110,7 @@ def main(test: bool, hints_enabled: bool, instance_timestamp: datetime, page: Pa
     try:
         expect(date_to_select).to_be_visible()
     except Exception as e:
-        main_logger.debug(f"{__name__}: Date selection was not visible. Attempting to click Date box.")
+        main_logger.debug(f"{__name__}: Date selection was NOT visible. Attempting to click Date box.")
         page.get_by_role("button", name="Pick-up Date required").click()
         expect(date_to_select).to_be_visible()
     hints_enabled and print(f"Step: 8 {checkmark}")
@@ -172,35 +184,16 @@ def main(test: bool, hints_enabled: bool, instance_timestamp: datetime, page: Pa
     expect(go_button).to_be_visible()
     go_button.click()
     hints_enabled and print(f"Step: 18 {checkmark}")
-    page.wait_for_load_state("networkidle")
+
+    # Checks if results page has loaded
+    results_page = page.locator('h1[class="title__heading-text"]')
+    results_page.wait_for()
+    hints_enabled and print(f"HINT {__name__}: Results page reached.")
 
 
     ###
     ### PARSER
     ###
-
-
-    # # works
-    # print('checking buttons')
-    # # Find all buttons with the "data_dtm_track" attribute
-
-    # buttons_with_data_dtm_track = page.locator('button[data_dtm_track^="car_class|pay_later|"]')
-    # if buttons_with_data_dtm_track.count() == 0:
-    #     buttons_with_data_dtm_track = page.locator('button[data-dtm-track^="car_class|pay_later|"]')
-
-    # # Get the count of such buttons
-    # button_count = buttons_with_data_dtm_track.count()
-
-    # rtn_list = []
-
-    # # Loop through all occurrences and capture their attributes or text
-    # for i in range(button_count):
-    #     button = buttons_with_data_dtm_track.nth(i)
-    #     # For example, you can capture the value of the attribute or inner text
-    #     data_dtm_track_value = button.get_attribute('data-dtm-track')
-    #     if hints_enabled:
-    #         print(f"Button {i}: data-dtm-track = {data_dtm_track_value}")
-    #     rtn_list.append(data_dtm_track_value)
 
 
     epoch_ident = int(time.time())
@@ -267,6 +260,11 @@ def main(test: bool, hints_enabled: bool, instance_timestamp: datetime, page: Pa
         total_span2 = element_total.locator('span[class="vehicle-price-component__total-text"]').text_content()
         total_text = total_full.replace(total_span1, "").replace(total_span2, "").strip()
 
+        # # unlimited miles
+        # element_miles = option_element.nth(i).locator('div[class="vehicle-select-expanded-details__mileage-copy"]')
+        # is_unlimited = element_miles.text_content()
+        # print(f"HINT: option's unlimited miles is {is_unlimited}")
+
         # # Datetime calcutions
         date_scr_date = instance_timestamp.strftime("%Y-%m-%d")
         date_scr_int = int(instance_timestamp.strftime("%w"))
@@ -287,7 +285,8 @@ def main(test: bool, hints_enabled: bool, instance_timestamp: datetime, page: Pa
                               date_rsv_int,
                               adv_rsv,
                               daily_text,
-                              total_text))
+                              total_text,
+                              True)) # Alamo expanded section inconsistent
 
 
     option_tuples_cleaned = []
@@ -305,18 +304,25 @@ def main(test: bool, hints_enabled: bool, instance_timestamp: datetime, page: Pa
     # auto update to populate known dtm trackers
     alamo_dtm.dtm_update(False, hints_enabled, option_tuples_cleaned)
 
-    # # add entries to database
-    # database_func.db_update(test, hints_enabled, option_tuples_cleaned)
-    # print(f"database updated")
+    # add entries to database
+    database_func.db_update(test, hints_enabled, option_tuples_cleaned)
+    print(f"database updated")
 
-    # # export updated database to temp csv
-    # # test csv path: 'test/rental_prices_export_alamo.csv'
-    # # actual csv path: 'temp/rental_prices_export_alamo.csv'
-    # database_func.db_export_rental_prices(test, hints_enabled, service_default)
+    # export updated database to temp csv
+    # test csv path: '../exports/test_data_export_Alamo.csv'
+    # actual csv path: '../exports/rental_data_export_Alamo.csv'
+    database_func.db_export_rental_prices(test, hints_enabled, service_default)
 
 # Screenshot
-    # # # Need file utils for new screenshots
-    # page.screenshot(path="../exports/testss.png", full_page=True)
+    it_date = instance_timestamp.strftime("%Y%m%d")
+    screenshot_base = f'{it_date}'
+    folder_path = f'../resources/dod_screenshots/{it_date}'
+    file_utils.verify_folder_path(folder_path)
+    screenshot_path = file_utils.get_unique_filename(screenshot_base, folder_path)
+    main_logger.info(f'Screenshot saved and can be found here: {screenshot_path}')
+
+    page.screenshot(path=screenshot_path, full_page=True)
+
 
 if __name__ == "__main__":
     pass
