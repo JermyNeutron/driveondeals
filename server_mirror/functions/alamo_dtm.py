@@ -45,7 +45,7 @@ def dtm_update(test: bool, hints_enabled: bool, query: list) -> None:
                         alt += 1
                     break
             else:
-                print(f'we found something new: {i[2]}')
+                hints_enabled and print(f'we found something new: {i[2]}')
                 dtm_logger.warning(f'{__name__}: we found something new: {i[2]}')
 
     if alt == 0:
