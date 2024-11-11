@@ -95,7 +95,7 @@ def db_export_rental_prices(test: bool, hints_enabled: bool, service: str) -> No
 
     column_names = [description[0] for description in cursor.description]
 
-    export_path = f'test/rental_prices_export_{service}.csv' if test else f'temp/rental_prices_export_{service}.csv'
+    export_path = f'test/{data_path[:-3]}_export_{service}.csv'
     with open(export_path, mode='w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(column_names)
