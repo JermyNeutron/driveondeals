@@ -1,11 +1,13 @@
 # Miscellaneous
 scratch/
-test/**/*_test*
-functions_alamo/*_test*
 *_logs.txt
+functions_alamo/old_alamo_dtm.json
+functions_alamo/*_test*
+test/**/*_test*
 test/**/*.csv*
 
 # Database
+downloaded_data.db
 rental_data.db
 test_data.db
 
