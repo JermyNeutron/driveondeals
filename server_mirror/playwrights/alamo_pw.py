@@ -1,6 +1,5 @@
 from datetime import datetime, date, timedelta
 from datetime import time as dtt
-import logging
 import re
 import time
 
@@ -8,7 +7,7 @@ from playwright.sync_api import Page, expect, sync_playwright
 
 from functions import alamo_dtm, database_func, file_utils, import_logging, period_iterations
 
-main_logger = import_logging.main("../exports/logging_export.txt", "main_logger")
+main_logger = import_logging.main("exports/logging_export.txt", "main_logger")
 
 
 # Return suffix with date, i.e., 24th
@@ -39,13 +38,13 @@ def suffix(date_day: str) -> str:
 def minimums_rsv(test: bool, hints_enabled: bool, instance_timestamp: datetime, rsv_time: str) -> str:
     """
     Checks if timestamp is safely outside minimum threshold for making a reservation before experiencing booking issues.
-    
+
     Parameters:
         test (bool):
         hints_enabled (bool):
         instance_timestamp (datetime):
         rsv_time (str): '10:11'
-        
+
     Returns:
         rsv_time_str (str): '10:30'
     """
@@ -297,7 +296,7 @@ def main(test: bool, hints_enabled: bool, instance_timestamp: datetime, page: Pa
             option_tuples_dup.add(option)
 
     # write to txt for testing
-    with open("../resources/example_tuples_test.txt", "w") as file:
+    with open("resources/example_tuples_test.txt", "w") as file:
         for i in option_tuples_cleaned:
             file.write(f"{i}\n")
 
@@ -309,16 +308,17 @@ def main(test: bool, hints_enabled: bool, instance_timestamp: datetime, page: Pa
     print(f"database updated")
 
     # export updated database to temp csv
-    # test csv path: '../exports/test_data_export_Alamo.csv'
-    # actual csv path: '../exports/rental_data_export_Alamo.csv'
+    # test csv path: 'exports/test_data_export_Alamo.csv'
+    # actual csv path: 'exports/rental_data_export_Alamo.csv'
     database_func.db_export_rental_prices(test, hints_enabled, service_default)
 
 # Screenshot
     it_date = instance_timestamp.strftime("%Y%m%d")
     screenshot_base = f'{it_date}'
-    folder_path = f'../resources/dod_screenshots/{it_date}'
+    folder_path = f'resources/dod_screenshots/{it_date}'
     file_utils.verify_folder_path(folder_path)
     screenshot_path = file_utils.get_unique_filename(screenshot_base, folder_path)
+    print(f'Screenshot saved and can be found here: {screenshot_path}')
     main_logger.info(f'Screenshot saved and can be found here: {screenshot_path}')
 
     page.screenshot(path=screenshot_path, full_page=True)

@@ -1,8 +1,9 @@
 from functions import import_logging
+from datetime import datetime
 
-path = "../exports/test_log.txt"
+path = "exports/test_log.txt"
 
-main_logger = import_logging.main("../exports/logging_export.txt", "main_logger")
+main_logger = import_logging.main("exports/logging_export.txt", "main_logger")
 
 
 def main():
@@ -15,5 +16,10 @@ def test() -> None:
     main_logger.info("Hey there! I'm being logged from functions/func_test.py")
 
 
+def whattime() -> None:
+    print(datetime.now())
+
+
 if __name__ == "__main__":
-    main()
+    # main()
+    whattime()
