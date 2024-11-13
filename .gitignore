@@ -3,8 +3,11 @@ scratch/
 *_logs.txt
 functions_alamo/old_alamo_dtm.json
 functions_alamo/*_test*
+
+# Export Products
 test/**/*_test*
 test/**/*.csv*
+temp/*.csv*
 
 # Database
 downloaded_data.db
