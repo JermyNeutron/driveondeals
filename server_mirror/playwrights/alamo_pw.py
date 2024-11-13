@@ -3,7 +3,7 @@ from datetime import time as dtt
 import re
 import time
 
-from playwright.sync_api import Page, expect, sync_playwright
+from playwright.sync_api import Page, expect, sync_playwright, TimeoutError
 
 from functions import alamo_dtm, database_func, file_utils, import_logging, period_iterations
 
@@ -185,144 +185,151 @@ def main(test: bool, hints_enabled: bool, instance_timestamp: datetime, page: Pa
     hints_enabled and print(f"Step: 18 {checkmark}")
 
     # Checks if results page has loaded
-    results_page = page.locator('h1[class="title__heading-text"]')
-    results_page.wait_for()
-    hints_enabled and print(f"HINT {__name__}: Results page reached.")
+    try:
+        results_page = page.locator('h1[class="title__heading-text"]')
+        results_page.wait_for(timeout=10000)
+        hints_enabled and print(f"HINT {__name__}: Results page reached.")
 
 
-    ###
-    ### PARSER
-    ###
+        ###
+        ### PARSER
+        ###
 
 
-    epoch_ident = int(time.time())
-    service_default = "Alamo"
+        epoch_ident = int(time.time())
+        service_default = "Alamo"
 
-    option_element = page.locator('div[class="vehicle-select-details component-theme--light"]')
-    option_count = option_element.count()
-    option_tuples = []
-    for i in range(option_count):
-        # type
-        element_type = option_element.nth(i).locator('h3[class="vehicle-select-details__header"]')
-        type_text = element_type.inner_text()
+        option_element = page.locator('div[class="vehicle-select-details component-theme--light"]')
+        option_count = option_element.count()
+        option_tuples = []
+        for i in range(option_count):
+            # type
+            element_type = option_element.nth(i).locator('h3[class="vehicle-select-details__header"]')
+            type_text = element_type.inner_text()
 
-        # model
-        element_model = option_element.nth(i).locator('p[class="vehicle-select-details__make-model"]')
-        model_text = element_model.inner_text()
+            # model
+            element_model = option_element.nth(i).locator('p[class="vehicle-select-details__make-model"]')
+            model_text = element_model.inner_text()
 
-        # # pax
-        try:
-            element_pax = option_element.nth(i).locator('li[class="vehicle-details-icon-list__icon vehicle-details-icon-list__icon--passenger"]')
-            pax_full = element_pax.text_content(timeout=param_timeout_2)
-            pax_span = element_pax.locator('span[class="vehicle-details-icon-list__icon--sr-only"]').text_content(timeout=param_timeout_2)
-            pax_text = pax_full.replace(pax_span, "").strip()
-        except TimeoutError as te:
-            main_logger.debug(f'{__name__}: timeout exception made for {type_text}: {te}')
-            pax_text = None
-        except Exception as e:
-            main_logger.warning(f'{__name__}: unexpected exception made for {type_text}: {e}')
-            pax_text = None
+            # # pax
+            try:
+                element_pax = option_element.nth(i).locator('li[class="vehicle-details-icon-list__icon vehicle-details-icon-list__icon--passenger"]')
+                pax_full = element_pax.text_content(timeout=param_timeout_2)
+                pax_span = element_pax.locator('span[class="vehicle-details-icon-list__icon--sr-only"]').text_content(timeout=param_timeout_2)
+                pax_text = pax_full.replace(pax_span, "").strip()
+            except TimeoutError as e:
+                main_logger.debug(f'{__name__}: timeout exception made for {type_text}: {e}')
+                pax_text = None
+            except Exception as e:
+                main_logger.warning(f'{__name__}: unexpected exception made for {type_text}: {e}')
+                pax_text = None
 
-        # # lug
-        try:
-            element_lug = option_element.nth(i).locator('li[class="vehicle-details-icon-list__icon vehicle-details-icon-list__icon--suitcase"]')
-            lug_full = element_lug.text_content(timeout=param_timeout_2)
-            lug_span = element_lug.locator('span[class="vehicle-details-icon-list__icon--sr-only"]').text_content(timeout=param_timeout_2)
-            lug_text = lug_full.replace(lug_span, "").strip()
-        except TimeoutError as te:
-            main_logger.debug(f'timeout exception made for {type_text}: {te}')
-            lug_text = None
-        except Exception as e:
-            main_logger.warning(f'unexpected exception made for {type_text}: {e}')
-            lug_text = None
+            # # lug
+            try:
+                element_lug = option_element.nth(i).locator('li[class="vehicle-details-icon-list__icon vehicle-details-icon-list__icon--suitcase"]')
+                lug_full = element_lug.text_content(timeout=param_timeout_2)
+                lug_span = element_lug.locator('span[class="vehicle-details-icon-list__icon--sr-only"]').text_content(timeout=param_timeout_2)
+                lug_text = lug_full.replace(lug_span, "").strip()
+            except TimeoutError as te:
+                main_logger.debug(f'{__name__}: TimeoutError exception made for {type_text}: {te}')
+                lug_text = None
+            except Exception as e:
+                main_logger.warning(f'{__name__}: Unexpected exception made for {type_text}: {e}')
+                lug_text = None
 
-        # data_dtm_track
-        dtm_att = "car_class|pay_later|"
-        button_frmt = "data_dtm_track"
-        button_dtm = option_element.nth(i).locator(f'button[data_dtm_track^="{dtm_att}"]')
-        if button_dtm.count() == 0:
-            button_frmt = "data-dtm-track"
-            button_dtm = option_element.nth(i).locator(f'button[data-dtm-track^="{dtm_att}"]')
-        dtm_value = button_dtm.get_attribute(button_frmt).replace(dtm_att, "").strip()
+            # data_dtm_track
+            dtm_att = "car_class|pay_later|"
+            button_frmt = "data_dtm_track"
+            button_dtm = option_element.nth(i).locator(f'button[data_dtm_track^="{dtm_att}"]')
+            if button_dtm.count() == 0:
+                button_frmt = "data-dtm-track"
+                button_dtm = option_element.nth(i).locator(f'button[data-dtm-track^="{dtm_att}"]')
+            dtm_value = button_dtm.get_attribute(button_frmt).replace(dtm_att, "").strip()
 
-        # # daily $
-        element_daily = option_element.nth(i).locator('p[class="vehicle-price-component__charge"]')
-        daily_full = element_daily.text_content()
-        daily_span1 = element_daily.locator('span[class="vehicle-price-component__pay-symbol"]').text_content()
-        daily_span2 = element_daily.locator('span[class="vehicle-price-component__total-text vehicle-price-component__rate-text"]').text_content()
-        daily_text = daily_full.replace(daily_span1, "").replace(daily_span2, "").strip()
+            # # daily $
+            element_daily = option_element.nth(i).locator('p[class="vehicle-price-component__charge"]')
+            daily_full = element_daily.text_content()
+            daily_span1 = element_daily.locator('span[class="vehicle-price-component__pay-symbol"]').text_content()
+            daily_span2 = element_daily.locator('span[class="vehicle-price-component__total-text vehicle-price-component__rate-text"]').text_content()
+            daily_text = daily_full.replace(daily_span1, "").replace(daily_span2, "").strip()
 
-        # # total $
-        element_total = option_element.nth(i).locator('p[class="vehicle-price-component__charge vehicle-price-component__charge--secondary"]')
-        total_full = element_total.text_content()
-        total_span1 = element_total.locator('span[class="vehicle-price-component__pay-symbol"]').text_content()
-        total_span2 = element_total.locator('span[class="vehicle-price-component__total-text"]').text_content()
-        total_text = total_full.replace(total_span1, "").replace(total_span2, "").strip()
+            # # total $
+            element_total = option_element.nth(i).locator('p[class="vehicle-price-component__charge vehicle-price-component__charge--secondary"]')
+            total_full = element_total.text_content()
+            total_span1 = element_total.locator('span[class="vehicle-price-component__pay-symbol"]').text_content()
+            total_span2 = element_total.locator('span[class="vehicle-price-component__total-text"]').text_content()
+            total_text = total_full.replace(total_span1, "").replace(total_span2, "").strip()
 
-        # # unlimited miles
-        # element_miles = option_element.nth(i).locator('div[class="vehicle-select-expanded-details__mileage-copy"]')
-        # is_unlimited = element_miles.text_content()
-        # print(f"HINT: option's unlimited miles is {is_unlimited}")
+            # # unlimited miles
+            # element_miles = option_element.nth(i).locator('div[class="vehicle-select-expanded-details__mileage-copy"]')
+            # is_unlimited = element_miles.text_content()
+            # print(f"HINT: option's unlimited miles is {is_unlimited}")
 
-        # # Datetime calcutions
-        date_scr_date = instance_timestamp.strftime("%Y-%m-%d")
-        date_scr_int = int(instance_timestamp.strftime("%w"))
-        date_rsv_date = next_date_meta.strftime("%Y-%m-%d")
-        date_rsv_int = int(next_date_meta.strftime("%w"))
-        adv_rsv = (next_date_meta - instance_timestamp).days
+            # # Datetime calcutions
+            date_scr_date = instance_timestamp.strftime("%Y-%m-%d")
+            date_scr_int = int(instance_timestamp.strftime("%w"))
+            date_rsv_date = next_date_meta.strftime("%Y-%m-%d")
+            date_rsv_int = int(next_date_meta.strftime("%w"))
+            adv_rsv = (next_date_meta - instance_timestamp).days
 
-        option_tuples.append((epoch_ident,
-                              service_default,
-                              type_text,
-                              model_text,
-                              pax_text,
-                              lug_text,
-                              dtm_value,
-                              date_scr_date,
-                              date_scr_int,
-                              date_rsv_date,
-                              date_rsv_int,
-                              adv_rsv,
-                              daily_text,
-                              total_text,
-                              True)) # Alamo expanded section inconsistent
+            option_tuples.append((epoch_ident,
+                                service_default,
+                                type_text,
+                                model_text,
+                                pax_text,
+                                lug_text,
+                                dtm_value,
+                                date_scr_date,
+                                date_scr_int,
+                                date_rsv_date,
+                                date_rsv_int,
+                                adv_rsv,
+                                daily_text,
+                                total_text,
+                                True)) # Alamo expanded section inconsistent
 
 
-    option_tuples_cleaned = []
-    option_tuples_dup = set()
-    for option in option_tuples:
-        if option not in option_tuples_dup:
-            option_tuples_cleaned.append(option)
-            option_tuples_dup.add(option)
+        option_tuples_cleaned = []
+        option_tuples_dup = set()
+        for option in option_tuples:
+            if option not in option_tuples_dup:
+                option_tuples_cleaned.append(option)
+                option_tuples_dup.add(option)
 
-    # write to txt for testing
-    with open("resources/example_tuples_test.txt", "w") as file:
-        for i in option_tuples_cleaned:
-            file.write(f"{i}\n")
+        # write to txt for testing
+        with open("resources/example_tuples_test.txt", "w") as file:
+            for i in option_tuples_cleaned:
+                file.write(f"{i}\n")
 
-    # auto update to populate known dtm trackers
-    alamo_dtm.dtm_update(False, hints_enabled, option_tuples_cleaned)
+        # auto update to populate known dtm trackers
+        alamo_dtm.dtm_update(False, hints_enabled, option_tuples_cleaned)
 
-    # add entries to database
-    database_func.db_update(test, hints_enabled, option_tuples_cleaned)
-    print(f"database updated")
+        # add entries to database
+        database_func.db_update(test, hints_enabled, option_tuples_cleaned)
+        print(f"database updated")
 
-    # export updated database to temp csv
-    # test csv path: 'exports/test_data_export_Alamo.csv'
-    # actual csv path: 'exports/rental_data_export_Alamo.csv'
-    database_func.db_export_rental_prices(test, hints_enabled, service_default)
+        # export updated database to temp csv
+        # test csv path: 'exports/test_data_export_Alamo.csv'
+        # actual csv path: 'exports/rental_data_export_Alamo.csv'
+        database_func.db_export_rental_prices(test, hints_enabled, service_default)
 
-# Screenshot
-    it_date = instance_timestamp.strftime("%Y%m%d")
-    screenshot_base = f'{it_date}'
-    folder_path = f'resources/dod_screenshots/{it_date}'
-    file_utils.verify_folder_path(folder_path)
-    screenshot_path = file_utils.get_unique_filename(screenshot_base, folder_path)
-    print(f'Screenshot saved and can be found here: {screenshot_path}')
-    main_logger.info(f'Screenshot saved and can be found here: {screenshot_path}')
+    # Screenshot
+        it_date = instance_timestamp.strftime("%Y%m%d")
+        screenshot_base = f'{it_date}'
+        folder_path = f'resources/dod_screenshots/{it_date}'
+        file_utils.verify_folder_path(folder_path)
+        screenshot_path = file_utils.get_unique_filename(screenshot_base, folder_path)
+        print(f'Screenshot saved and can be found here: {screenshot_path}')
+        main_logger.info(f'{__name__}: Screenshot saved and can be found here: {screenshot_path}')
 
-    page.screenshot(path=screenshot_path, full_page=True)
+        page.screenshot(path=screenshot_path, full_page=True)
 
+    except TimeoutError as e:
+        hints_enabled and print(f'{__name__}: No available rental vehicles located at {test_pu_location} for {instance_timestamp.strftime("%m-%d-%Y")}: {e}')
+        main_logger.info(f'{__name__}: No available rental vehicles located at {test_pu_location} for {instance_timestamp.strftime("%m-%d-%Y")}: {e}')
+    except Exception as e:
+        hints_enabled and print(f"{__name__}: A new exception has been encountered: {e}")
+        main_logger.critical(f"{__name__}: A new exception has been encountered: {e}")
 
 if __name__ == "__main__":
     pass
