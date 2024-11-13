@@ -60,7 +60,7 @@ def run_enterprise(test: bool, hints_enabled: bool, instance_timestamp: datetime
 
 def main(public: bool) -> None:
     test = True if not public else False
-    hints_enabled = True if not public else False
+    hints_enabled = True # if not public else False
 
     instance_timestamp = get_instance_timestamp(test, hints_enabled)
     main_logger.info(f"{__name__}: Program is waking up...")
