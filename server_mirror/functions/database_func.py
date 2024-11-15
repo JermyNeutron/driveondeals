@@ -78,7 +78,7 @@ def db_update(test: bool, hints_enabled: bool, option_tuples_cleaned: list) -> N
     for option in option_tuples_cleaned:
         cursor.execute('''
             INSERT INTO rental_prices (epoch_ident, location, service, type, model, pax, lug, data_dtm_track, date_scr_date, date_scr_int, date_rsv_date, date_rsv_int, adv_rsv, daily, total, unlimited)
-            Values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+            Values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
         ''', option)
 
     connection.commit()
@@ -116,7 +116,7 @@ def add_location():
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS rental_prices (
-            id INTEGER NOT NULL,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
             epoch_ident INT NOT NULL,
             location TEXT NOT NULL,
             service TEXT NOT NULL,
