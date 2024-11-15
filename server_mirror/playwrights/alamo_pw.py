@@ -272,9 +272,10 @@ def main(test: bool, hints_enabled: bool, instance_timestamp: datetime, page: Pa
             date_rsv_int = int(next_date_meta.strftime("%w"))
             adv_rsv = (next_date_meta - instance_timestamp).days
 
+            # Tuple creation for database input
             option_tuples.append((epoch_ident,
-                                service_default,
                                 test_pu_location, # change to appropriate variable for iteration
+                                service_default,
                                 type_text,
                                 model_text,
                                 pax_text,
@@ -314,7 +315,7 @@ def main(test: bool, hints_enabled: bool, instance_timestamp: datetime, page: Pa
         # actual csv path: 'exports/rental_data_export_Alamo.csv'
         database_func.db_export_rental_prices(test, hints_enabled, service_default)
 
-    # Screenshot
+        # Screenshot
         it_date = instance_timestamp.strftime("%Y%m%d")
         screenshot_base = f'{it_date}'
         folder_path = f'resources/dod_screenshots/{it_date}'
