@@ -23,6 +23,7 @@ def create_database(test: bool, hints_enabled: bool) -> None:
     CREATE TABLE IF NOT EXISTS rental_prices (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         epoch_ident INT NOT NULL,
+        location TEXT NOT NULL,
         service TEXT NOT NULL,
         type TEXT NOT NULL,
         model TEXT NOT NULL,
@@ -44,6 +45,7 @@ def create_database(test: bool, hints_enabled: bool) -> None:
     CREATE TABLE IF NOT EXISTS cheapest_prices(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         epoch_ident INT NOT NULL,
+        location TEXT NOT NULL,
         service TEXT NOT NULL,
         type TEXT NOT NULL,
         model TEXT NOT NULL,
@@ -75,7 +77,7 @@ def db_update(test: bool, hints_enabled: bool, option_tuples_cleaned: list) -> N
 
     for option in option_tuples_cleaned:
         cursor.execute('''
-            INSERT INTO rental_prices (epoch_ident, service, type, model, pax, lug, data_dtm_track, date_scr_date, date_scr_int, date_rsv_date, date_rsv_int, adv_rsv, daily, total, unlimited)
+            INSERT INTO rental_prices (epoch_ident, location, service, type, model, pax, lug, data_dtm_track, date_scr_date, date_scr_int, date_rsv_date, date_rsv_int, adv_rsv, daily, total, unlimited)
             Values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
         ''', option)
 
@@ -105,6 +107,50 @@ def db_export_rental_prices(test: bool, hints_enabled: bool, service: str) -> No
     hints_enabled and print(f'HINT {__name__}: Data exported to {export_path}')
 
 
+def add_location():
+    db_path = 'rental_data.db'
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    print("adding column at [2]")
+    cursor.execute("ALTER TABLE rental_prices RENAME TO old_prices;")
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS rental_prices (
+            id INTEGER NOT NULL,
+            epoch_ident INT NOT NULL,
+            location TEXT NOT NULL,
+            service TEXT NOT NULL,
+            type TEXT NOT NULL,
+            model TEXT NOT NULL,
+            pax INTEGER,
+            lug INTEGER,
+            data_dtm_track TEXT NOT NULL,
+            date_scr_date TEXT NOT NULL,
+            date_scr_int INTEGER NOT NULL,
+            date_rsv_date TEXT NOT NULL,
+            date_rsv_int INTEGER NOT NULL,
+            adv_rsv INTEGER NOT NULL,
+            daily REAL NOT NUll,
+            total REAL NOT NULL,
+            unlimited INTEGER NOT NULL
+        );
+    """)
+
+    cursor.execute("""
+        INSERT INTO rental_prices (id, epoch_ident, location, service, type, model, pax, lug, data_dtm_track, date_scr_date, date_scr_int, date_rsv_date, date_rsv_int, adv_rsv, daily, total, unlimited)
+        SELECT id, epoch_ident, "SNA", service, type, model, pax, lug, data_dtm_track, date_scr_date, date_scr_int, date_rsv_date, date_rsv_int, adv_rsv, daily, total, unlimited
+        FROM old_prices;
+    """)
+
+    cursor.execute("DROP TABLE old_prices;")
+
+    conn.commit()
+    conn.close()
+    print('location added')
+
+    db_export_rental_prices(False, hints_enabled, "Alamo")
+
+
 if __name__ == "__main__":
     choice1 = int(input('Enter bool for test: 1) True and 2) False: '))
     print(type(choice1))
@@ -119,12 +165,16 @@ if __name__ == "__main__":
     service = "Alamo"
 
     while True:
-        choice = input(f"1) Create database\n2) Export {data_path} table\nEnter Choice: ")
+        choice = input(f"1) Create database\n2) Export {data_path} table\nQ) Exit\nEnter Choice: ")
         if choice == "1":
             create_database(test, hints_enabled)
             break
         elif choice == "2":
             db_export_rental_prices(test, hints_enabled, service)
+            break
+        elif choice == "location":
+            add_location()
+        elif choice.lower() == "q":
             break
         else:
             print(f'{choice} was an invalid choice.\n')

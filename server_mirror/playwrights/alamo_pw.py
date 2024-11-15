@@ -274,6 +274,7 @@ def main(test: bool, hints_enabled: bool, instance_timestamp: datetime, page: Pa
 
             option_tuples.append((epoch_ident,
                                 service_default,
+                                test_pu_location, # change to appropriate variable for iteration
                                 type_text,
                                 model_text,
                                 pax_text,
