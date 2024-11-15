@@ -5,7 +5,7 @@ checkmark = "\u2713"
 xmark = "\u2715"
 
 
-def dx1rtn(test: bool, hints_enabled: bool, date_pointer: datetime) -> datetime:
+def dx1rtn(test: bool, hints_enabled: bool, date_pointer: datetime) -> datetime: # DEPRECATED!
     return_datetime = date_pointer + timedelta(days=1)
     return return_datetime
 
@@ -14,7 +14,7 @@ def dx3rtn(test: bool, hints_enabled: bool, date_pointer: datetime) -> tuple:
 
     
     def find_start(test: bool, hints_enabled: bool, date_pointer: datetime) -> datetime:
-        date_start = date_pointer
+        date_start = date_pointer + timedelta(days=1)
         if date_start.strftime("%A") != "Friday":
             tgt_date = date_start
             while tgt_date.strftime("%A") != "Friday":
@@ -33,19 +33,39 @@ def dx3rtn(test: bool, hints_enabled: bool, date_pointer: datetime) -> tuple:
     return tuple(rtn_tuple)
 
 
-def dx7rtn(test: bool, hints_enabled: bool, date_pointer: datetime) -> datetime:
-    return_date = date_pointer + timedelta(days=7)
-    return return_date
+def dx7rtn(test: bool, hints_enabled: bool, date_pointer: datetime) -> tuple[datetime, datetime]:
+    pu_date = date_pointer + timedelta(days=7)
+    do_date = pu_date + timedelta(days=1)
+    hints_enabled and print(f'HINT: {__name__}: Searching rentals for {pu_date.strftime("%m-%d-%Y")} - {do_date.strftime("%m-%d-%Y")}.')
+    return pu_date, do_date
 
 
-def dx14rtn(test: bool, hints_enabled: bool, date_pointer: datetime) -> datetime:
-    return_date = date_pointer + timedelta(days=14)
-    return return_date
+def dx14rtn(test: bool, hints_enabled: bool, date_pointer: datetime) -> tuple[datetime, datetime]:
+    pu_date = date_pointer + timedelta(days=14)
+    do_date = pu_date + timedelta(days=1)
+    hints_enabled and print(f'HINT: {__name__}: Searching rentals for {pu_date.strftime("%m-%d-%Y")} - {do_date.strftime("%m-%d-%Y")}.')
+    return pu_date, do_date
 
 
-def dx30rtn(test: bool, hints_enabled: bool, date_pointer: datetime) -> datetime:
-    return_date = date_pointer + timedelta(days=30)
-    return return_date
+def dx30rtn(test: bool, hints_enabled: bool, date_pointer: datetime) -> tuple[datetime, datetime]:
+    pu_date = date_pointer + timedelta(days=30)
+    do_date = pu_date + timedelta(days=1)
+    hints_enabled and print(f'HINT: {__name__}: Searching rentals for {pu_date.strftime("%m-%d-%Y")} - {do_date.strftime("%m-%d-%Y")}.')
+    return pu_date, do_date
+
+
+def sameday(test: bool, hints_enabled: bool, date_pointer: datetime) -> tuple[datetime, datetime]:
+    pu_date = date_pointer
+    do_date = pu_date + timedelta(days=1)
+    hints_enabled and print(f'HINT: {__name__}: Searching rentals for {pu_date.strftime("%m-%d-%Y")} - {do_date.strftime("%m-%d-%Y")}.')
+    return pu_date, do_date
+
+
+def nextday(test: bool, hints_enabled: bool, date_pointer: datetime) -> tuple[datetime, datetime]:
+    pu_date = date_pointer + timedelta(days=1)
+    do_date = pu_date + timedelta(days=1)
+    hints_enabled and print(f'HINT: {__name__}: Searching rentals for {pu_date.strftime("%m-%d-%Y")} - {do_date.strftime("%m-%d-%Y")}.')
+    return pu_date, do_date
 
 
 if __name__ == "__main__":
