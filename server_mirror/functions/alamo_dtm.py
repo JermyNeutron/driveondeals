@@ -14,7 +14,7 @@ def dtm_update(test: bool, hints_enabled: bool, query: list) -> None:
     Parameters:
         test (bool): No application yet.
         hints_enabled (bool):
-        query (list): [(1731192271, 'Alamo', 'Midsize SUV', 'Nissan Rogue or similar', '5', '4', 'IFAR', '2024-11-09', 6, '2024-11-10', 0, 1, '70.00', '88.30', True), ...,]
+        query (list): [(1731243736,SNA,Alamo,Midsize SUV,Nissan Rogue or similar,5,4,IFAR,2024-11-10,0,2024-11-11,1,1,91.2,114.43,True), ...,]
 
     Returns:
         None:
@@ -29,24 +29,24 @@ def dtm_update(test: bool, hints_enabled: bool, query: list) -> None:
     # Compare dtms and descriptions
     for i in query:
         # if type Premium (since there are 2 of them)
-        if i[2] == "Premium":
+        if i[3] == "Premium":
             pass
         else:
             for category, vehtype in dtm_import_list.items():
-                if i[2] in vehtype:
+                if i[3] in vehtype:
                     # everything else
-                    if i[3] != vehtype[i[2]]["description"]:
-                        vehtype[i[2]]["description"] = i[3]
-                        dtm_logger.info(f'HINT {__name__}: "{i[2]}" had their description assigned to "{i[3]}".')
+                    if i[4] != vehtype[i[3]]["description"]:
+                        vehtype[i[3]]["description"] = i[4]
+                        dtm_logger.info(f'HINT {__name__}: "{i[3]}" had their description assigned to "{i[4]}".')
                         alt += 1
-                    if i[6] != vehtype[i[2]]["dtm"]:
-                        vehtype[i[2]]["dtm"] = i[6]
-                        dtm_logger.info(f'HINT {__name__}: "{i[2]}" had their dtm assigned to "{i[6]}".')
+                    if i[6] != vehtype[i[3]]["dtm"]:
+                        vehtype[i[3]]["dtm"] = i[7]
+                        dtm_logger.info(f'HINT {__name__}: "{i[3]}" had their dtm assigned to "{i[7]}".')
                         alt += 1
                     break
             else:
-                hints_enabled and print(f'we found something new: {i[2]}')
-                dtm_logger.warning(f'{__name__}: we found something new: {i[2]}')
+                hints_enabled and print(f'we found something new: {i[3]}')
+                dtm_logger.warning(f'{__name__}: we found something new: {i[3]}')
 
     if alt == 0:
         hints_enabled and print(f"HINT {__name__}: dtm's in alamo_dtm.json are up to date.")
