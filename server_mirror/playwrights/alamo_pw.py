@@ -64,7 +64,7 @@ def minimums_rsv(test: bool, hints_enabled: bool, instance_timestamp: datetime, 
     return rsv_time_str
 
 
-def main(test: bool, hints_enabled: bool, instance_timestamp: datetime, page: Page) -> None:
+def execute_playwright(test: bool, hints_enabled: bool, instance_timestamp: datetime, tgt_location: str, rsv_window: tuple, page: Page) -> None:
     # PARAMS
     param_timeout_1 = 1000 # VERIFIED timeout for initial pop-up
     param_timeout_2 = 1000 # general purpose
@@ -72,6 +72,9 @@ def main(test: bool, hints_enabled: bool, instance_timestamp: datetime, page: Pa
     test_pu_location = "SNA"
     checkmark = "\u2713"
     xmark = "\u2715"
+
+    # Period Iterations
+
 
     # 1: go To Webpage
     page.goto("https://www.alamo.com/en/reserve.html#/start")
@@ -82,12 +85,12 @@ def main(test: bool, hints_enabled: bool, instance_timestamp: datetime, page: Pa
     hints_enabled and print(f"Step: 2 {checkmark}")
     main_logger.info(f"Step: 2 {checkmark}")
     # 3: Enter Pick Up Location
-    page.locator("#pickupLocation").fill(test_pu_location)
+    page.locator("#pickupLocation").fill(tgt_location)
     hints_enabled and print(f"Step: 3 {checkmark}")
     # 4: Select First Populated Option
     page.wait_for_selector("role=option")
     page.get_by_role("option").first.click()
-    main_logger.info(f"{__name__}: Location selected {test_pu_location} {checkmark}") # VARIABLE NEEDS CHANGE
+    main_logger.info(f"{__name__}: Location selected {tgt_location} {checkmark}") # VARIABLE NEEDS CHANGE
     hints_enabled and print(f"Step: 4 {checkmark}")
     # 5: Close Pop Up
     try:
@@ -100,8 +103,8 @@ def main(test: bool, hints_enabled: bool, instance_timestamp: datetime, page: Pa
     page.wait_for_timeout(param_timeout_1)
     hints_enabled and print(f"Step: 6 {checkmark}")
     # 7: Assign Current Date As Pick Up
-    date_suffix = suffix(instance_timestamp.strftime("%d"))
-    aria_label_pu = f"Choose {instance_timestamp.strftime('%A')}, {instance_timestamp.strftime('%B')} {date_suffix}, {instance_timestamp.strftime('%Y')}"
+    date_suffix = suffix(rsv_window[0].strftime("%d"))
+    aria_label_pu = f"Choose {rsv_window[0].strftime('%A')}, {rsv_window[0].strftime('%B')} {date_suffix}, {rsv_window[0].strftime('%Y')}"
     main_logger.info(f"{__name__}: Viewing availabilities for aria: {aria_label_pu}")
     date_to_select = page.locator(f'div[role="button"][aria-label="{aria_label_pu}"]').first
     hints_enabled and print(f"Step: 7 {checkmark}")
@@ -145,8 +148,7 @@ def main(test: bool, hints_enabled: bool, instance_timestamp: datetime, page: Pa
     hints_enabled and print(f"Step: 11 {checkmark}")
     # 12: Default Return Date Search
     # Aria-label format: "Choose Saturday, October 12th, 2024"
-    next_date_meta = period_iterations.dx1rtn(test, hints_enabled, instance_timestamp)
-    aria_label_do_date = f'Choose {next_date_meta.strftime("%A")}, {next_date_meta.strftime("%B")} {suffix(next_date_meta.strftime("%d"))}, {next_date_meta.strftime("%Y")}'
+    aria_label_do_date = f'Choose {rsv_window[1].strftime("%A")}, {rsv_window[1].strftime("%B")} {suffix(rsv_window[1].strftime("%d"))}, {rsv_window[1].strftime("%Y")}'
     next_date_to_select = page.locator(f'div[role="button"][aria-label="{aria_label_do_date}"]').first
     hints_enabled and print(f"Step: 12 {checkmark}")
     # 13: Drop Off Check Date Visibility
@@ -266,15 +268,16 @@ def main(test: bool, hints_enabled: bool, instance_timestamp: datetime, page: Pa
             # print(f"HINT: option's unlimited miles is {is_unlimited}")
 
             # # Datetime calcutions
-            date_scr_date = instance_timestamp.strftime("%Y-%m-%d")
-            date_scr_int = int(instance_timestamp.strftime("%w"))
-            date_rsv_date = next_date_meta.strftime("%Y-%m-%d")
-            date_rsv_int = int(next_date_meta.strftime("%w"))
-            adv_rsv = (next_date_meta - instance_timestamp).days
+            date_scr_date = instance_timestamp.strftime("%Y-%m-%d") # Scrape Date
+            date_scr_int = int(instance_timestamp.strftime("%w")) # Scrape Date INTEGER
+            date_rsv_date = rsv_window[0].strftime("%Y-%m-%d") # Reservation Date
+            date_rsv_int = int(rsv_window[0].strftime("%w")) # Reservation Date INTEGER
+            adv_rsv = rsv_window[2] # Time Until Reservation
+            span_rsv = rsv_window[3] # Length of Reservation
 
             # Tuple creation for database input
             option_tuples.append((epoch_ident,
-                                test_pu_location, # change to appropriate variable for iteration
+                                tgt_location,
                                 service_default,
                                 type_text,
                                 model_text,
@@ -286,6 +289,7 @@ def main(test: bool, hints_enabled: bool, instance_timestamp: datetime, page: Pa
                                 date_rsv_date,
                                 date_rsv_int,
                                 adv_rsv,
+                                span_rsv,
                                 daily_text,
                                 total_text,
                                 True)) # Alamo expanded section inconsistent
@@ -317,7 +321,7 @@ def main(test: bool, hints_enabled: bool, instance_timestamp: datetime, page: Pa
 
         # Screenshot
         it_date = instance_timestamp.strftime("%Y%m%d")
-        screenshot_base = f'{it_date}'
+        screenshot_base = f'{it_date}_{rsv_window[4]}'
         folder_path = f'resources/dod_screenshots/{it_date}'
         file_utils.verify_folder_path(folder_path)
         screenshot_path = file_utils.get_unique_filename(screenshot_base, folder_path)
@@ -327,11 +331,28 @@ def main(test: bool, hints_enabled: bool, instance_timestamp: datetime, page: Pa
         page.screenshot(path=screenshot_path, full_page=True)
 
     except TimeoutError as e:
-        hints_enabled and print(f'{__name__}: No available rental vehicles located at {test_pu_location} for {instance_timestamp.strftime("%m-%d-%Y")}: {e}')
-        main_logger.info(f'{__name__}: No available rental vehicles located at {test_pu_location} for {instance_timestamp.strftime("%m-%d-%Y")}: {e}')
+        hints_enabled and print(f'{__name__}: No available rental vehicles located at {tgt_location} for {rsv_window[0].strftime("%m-%d-%Y")}: {e}')
+        main_logger.info(f'{__name__}: No available rental vehicles located at {tgt_location} for {rsv_window[0].strftime("%m-%d-%Y")}: {e}')
     except Exception as e:
         hints_enabled and print(f"{__name__}: A new exception has been encountered: {e}")
         main_logger.critical(f"{__name__}: A new exception has been encountered: {e}")
+
+
+def main(
+    test: bool,
+    hints_enabled: bool, 
+    instance_timestamp: datetime, 
+    rsv_windows: tuple, 
+    page: Page
+) -> None:
+    locations = ["SNA"]
+
+# location variability
+    for tgt_location in locations:
+# period iteration
+        for window in rsv_windows:
+            execute_playwright(test, hints_enabled, instance_timestamp, tgt_location, window, page)
+
 
 if __name__ == "__main__":
     pass
