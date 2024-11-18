@@ -151,6 +151,80 @@ def add_location():
     db_export_rental_prices(False, hints_enabled, "Alamo")
 
 
+# forceupdate
+def forceupdate():
+    # db_path = 'rental_data.db'
+    # conn = sqlite3.connect(db_path)
+    # cursor = conn.cursor()
+
+    # print('changing adv_rsv to 0s...')
+
+    # cursor.execute('UPDATE rental_prices SET adv_rsv = 0;')
+
+    # conn.commit()
+    # conn.close()
+    # print('adv changed!')
+
+    # db_export_rental_prices(False, hints_enabled, "Alamo")
+
+
+    db_path = 'rental_data.db'
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    print("adding span_rsv")
+
+    cursor.execute("ALTER TABLE rental_prices RENAME TO old_prices;")
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS rental_prices (
+            id INTEGER NOT NULL,
+            epoch_ident INT NOT NULL,
+            location TEXT NOT NULL,
+            service TEXT NOT NULL,
+            type TEXT NOT NULL,
+            model TEXT NOT NULL,
+            pax INTEGER,
+            lug INTEGER,
+            data_dtm_track TEXT NOT NULL,
+            date_scr_date TEXT NOT NULL,
+            date_scr_int INTEGER NOT NULL,
+            date_rsv_date TEXT NOT NULL,
+            date_rsv_int INTEGER NOT NULL,
+            adv_rsv INTEGER NOT NULL,
+            span_rsv INTEGER NOT NULL,
+            daily REAL NOT NUll,
+            total REAL NOT NULL,
+            unlimited INTEGER NOT NULL
+        );
+    """)
+
+    cursor.execute("""
+        INSERT INTO rental_prices (id, epoch_ident, location, service, type, model, pax, lug, data_dtm_track, date_scr_date, date_scr_int, date_rsv_date, date_rsv_int, adv_rsv, span_rsv, daily, total, unlimited)
+        SELECT id, epoch_ident, location, service, type, model, pax, lug, data_dtm_track, date_scr_date, date_scr_int, date_rsv_date, date_rsv_int, adv_rsv, 1, daily, total, unlimited
+        FROM old_prices;
+    """)
+
+    # cursor.execute("DROP TABLE old_prices;")
+
+    conn.commit()
+    conn.close()
+    print('column added')
+
+    db_export_rental_prices(False, hints_enabled, "Alamo")
+
+
+def deleteold():
+    db_path = 'rental_data.db'
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+
+    cursor.execute("DROP TABLE old_prices;")
+
+    conn.commit()
+    conn.close()
+    print('deleted old_prices')
+
+
 if __name__ == "__main__":
     choice1 = int(input('Enter bool for test: 1) True and 2) False: '))
     print(type(choice1))
@@ -174,6 +248,10 @@ if __name__ == "__main__":
             break
         elif choice == "location":
             add_location()
+        elif choice == "forceupdate":
+            forceupdate()
+        elif choice == "deleteold":
+            deleteold()
         elif choice.lower() == "q":
             break
         else:
