@@ -229,7 +229,7 @@ def forceupdate():
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS rental_prices (
-            id INTEGER NOT NULL,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
             epoch_ident INT NOT NULL,
             location TEXT NOT NULL,
             service TEXT NOT NULL,
