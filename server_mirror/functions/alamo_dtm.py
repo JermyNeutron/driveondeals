@@ -39,7 +39,7 @@ def dtm_update(test: bool, hints_enabled: bool, query: list) -> None:
                         vehtype[i[3]]["description"] = i[4]
                         dtm_logger.info(f'HINT {__name__}: "{i[3]}" had their description assigned to "{i[4]}".')
                         alt += 1
-                    if i[6] != vehtype[i[3]]["dtm"]:
+                    if i[7] != vehtype[i[3]]["dtm"]:
                         vehtype[i[3]]["dtm"] = i[7]
                         dtm_logger.info(f'HINT {__name__}: "{i[3]}" had their dtm assigned to "{i[7]}".')
                         alt += 1
