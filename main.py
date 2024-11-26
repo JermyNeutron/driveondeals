@@ -37,6 +37,7 @@ def run_alamo(test: bool, hints_enabled: bool, hl_mode: bool, ss_enabled: bool, 
 3) Options Available
 4) Check dtm's listed
 5) Check mileage
+6) Experiment
                 
 Select choice: """))
 # 5) Lets Class 1
@@ -50,6 +51,8 @@ Select choice: """))
                     parser.check_dtm(page)
                 elif choice == 5: # Unlimited mileage HTML section inconsistent loading
                     parser.check_mileage(page)
+                elif choice == 6:
+                    parser.fill(page)
                 # elif choice == 5:
                 #     try:
                 #         parser.lets_class_1(test, hints_enabled, page)

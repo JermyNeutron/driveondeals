@@ -253,13 +253,13 @@ def lets_class_1(test: bool, hints_enabled: bool, meta_krono: tuple, next_day_me
     # auto update to populate known dtm trackers
     dtm_update(False, hints_enabled, option_tuples_cleaned)
 
-    # add entries to database
-    create_db.db_update(test, hints_enabled, option_tuples_cleaned)
+    # # add entries to database
+    # create_db.db_update(test, hints_enabled, option_tuples_cleaned)
 
-    # export updated database to temp csv
-    # test csv path: 'test/rental_prices_export_alamo.csv'
-    # actual csv path: 'temp/rental_prices_export_alamo.csv'
-    create_db.db_export_rental_prices(test, hints_enabled, service_default)
+    # # export updated database to temp csv
+    # # test csv path: 'test/rental_prices_export_alamo.csv'
+    # # actual csv path: 'temp/rental_prices_export_alamo.csv'
+    # create_db.db_export_rental_prices(test, hints_enabled, service_default)
 
     # # it works!
     # print('\n')
@@ -278,6 +278,14 @@ def lets_class_1(test: bool, hints_enabled: bool, meta_krono: tuple, next_day_me
     # for rental_type, rental_object in options_available.items():
     #     print(rental_type)
     #     print(rental_object.model)
+    
+
+def fill(page: Page):
+    page.goto("https://www.alamo.com/en/reserve.html#/start")
+    page.locator("button[class='locationSearch__selectedLocation'][type='button']").click()
+    page.locator("#pickupLocation").fill("LGB")
+    page.get_by_role("option").first.click()
+
 
 
 def test():
