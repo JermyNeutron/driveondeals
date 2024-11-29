@@ -10,7 +10,7 @@ import time
 
 from functions_alamo.alamo_class import alamo_class
 from functions_alamo.alamo_dtm import dtm_update
-from functions_gen import create_db
+from functions_gen import create_db, suffix
 
 tracemalloc.start()
 
@@ -279,6 +279,59 @@ def lets_class_1(test: bool, hints_enabled: bool, meta_krono: tuple, next_day_me
     #     print(rental_type)
     #     print(rental_object.model)
     
+
+def lets_class_iterate_times(rsv_windows: tuple, page: Page):
+    # going back to homepage has all selections remembered (cookies), so for time, we can just toggle dates itself
+    pu_date = rsv_windows[0]
+    do_date = rsv_windows[1]
+    page.goto("https://www.alamo.com/en/reserve.html#/start")
+    # Aria-label format: "Choose Saturday, October 12th, 2024"
+    date_suffix = suffix.main(True, True, pu_date.strftime("%d"))
+    print(date_suffix)
+
+    # click pu box
+    try:
+        button = page.locator("#pickupDate")
+        button.click()
+    except Exception as e:
+        print(f'cannot click box: {e}')
+
+    # find pu date
+    aria_label_pu = f"Choose {pu_date.strftime('%A')}, {pu_date.strftime('%B')} {date_suffix}, {pu_date.strftime('%Y')}"
+    print(f'aria label pick up is: {aria_label_pu}')
+    try:
+        date_to_select = page.locator(f'div[role="button"][aria-label="{aria_label_pu}"]').first
+    except Exception:
+        try:
+            page.locator('div:has(img[src*="siteintercept/svg-close-btn-black-6.svg"])').click()
+        except:
+            print(e)
+    try:
+        date_to_select.click()
+    except Exception as e:
+        try:
+            page.locator('div:has(img[src*="siteintercept/svg-close-btn-black-6.svg"])').click()
+        except:
+            print(e)
+    
+    # need to select earliest time
+
+    # find do date
+    try:
+        button = page.locator("#returnDate")
+        button.click()
+    except:
+        try:
+            page.locator('div:has(img[src*="siteintercept/svg-close-btn-black-6.svg"])').click()
+        except Exception as e:
+            print(e)
+
+    date_suffix = suffix.main(True, True, do_date.strftime("%d"))
+    aria_label_do_date = f"Choose {do_date.strftime('%A')}, {do_date.strftime('%B')} {date_suffix}, {do_date.strftime('%Y')}"
+    date_to_select = page.locator(f'div[role="button"][aria-label="{aria_label_do_date}"]').first
+    date_to_select.click()
+    print(f'aria label drop off is: {aria_label_do_date}')
+
 
 def fill(page: Page):
     page.goto("https://www.alamo.com/en/reserve.html#/start")

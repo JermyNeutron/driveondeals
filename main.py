@@ -10,7 +10,7 @@ from playwright.sync_api import Page, expect, sync_playwright
 
 from test import test_alamo
 from functions_alamo import parser, alamo_class
-from functions_gen import create_db
+from functions_gen import create_db, period_iterations
 
 tracemalloc.start()
 
@@ -19,12 +19,15 @@ def get_instance_timestamp(test: bool, hints_enabled: bool) -> timedelta:
     return datetime.now()
 
 
-def run_alamo(test: bool, hints_enabled: bool, hl_mode: bool, ss_enabled: bool, auto_close: bool, instance_timestamp: datetime) -> None:
+def run_alamo(test: bool, hints_enabled: bool, hl_mode: bool,
+              ss_enabled: bool, auto_close: bool,
+              instance_timestamp: datetime) -> None:
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=hl_mode)
         context = browser.new_context()
         page = context.new_page()
-        test_alamo.test_basic_search(test, hints_enabled, ss_enabled, instance_timestamp, page) # change
+        test_alamo.test_basic_search(test, hints_enabled, ss_enabled,
+                                     instance_timestamp, page) # change
         if auto_close:
             context.close()
             browser.close()
@@ -41,6 +44,12 @@ def run_alamo(test: bool, hints_enabled: bool, hl_mode: bool, ss_enabled: bool, 
                 
 Select choice: """))
 # 5) Lets Class 1
+
+                # remove, testing purposes only
+                rsv_windows = (datetime(2024, 12, 6, 5, 2, 29, 793524),
+                               datetime(2024, 12, 7, 5, 2, 29, 793524),
+                               7, 1, 'p7rtn1')
+
                 if choice == 1:
                     parser.occurences_data_dtm_track(hints_enabled, page)
                 elif choice == 2:
@@ -49,10 +58,11 @@ Select choice: """))
                     parser.options_available(page)
                 elif choice == 4:
                     parser.check_dtm(page)
-                elif choice == 5: # Unlimited mileage HTML section inconsistent loading
+                # Unlimited mileage HTML section inconsistent loading
+                elif choice == 5:
                     parser.check_mileage(page)
                 elif choice == 6:
-                    parser.fill(page)
+                    parser.lets_class_iterate_times(rsv_windows, page)
                 # elif choice == 5:
                 #     try:
                 #         parser.lets_class_1(test, hints_enabled, page)
@@ -67,12 +77,20 @@ Select choice: """))
 if __name__ == "__main__":
     test = True
     hints_enabled = True
-    hl_mode = bool(int(input("Enable headless mode? 1 | 0: "))) # headless mode
-    ss_enabled = bool(int(input("Enable screenshots? 1 | 0: "))) # screenshot mode
-    auto_close = bool(int(input("Automatically close browser upon script completion? 1 | 0: "))) # browser close
+    # headless mode
+    hl_mode = bool(int(input("Enable headless mode? 1 | 0: ")))
+    # screenshot mode
+    ss_enabled = bool(int(input("Enable screenshots? 1 | 0: ")))
+    auto_close = bool(int(input(
+        "Automatically close browser upon script completion? 1 | 0: "
+        ))) # browser close
     create_db.create_database(test, hints_enabled)
-    instance_timestamp = get_instance_timestamp(test, hints_enabled)
 
-    run_alamo(test, hints_enabled, hl_mode, ss_enabled, auto_close, instance_timestamp)
+    instance_timestamp = get_instance_timestamp(test, hints_enabled)
+    # rsv_windows = period_iterations.main(test, hints_enabled,
+    #                                      instance_timestamp)
+
+    run_alamo(test, hints_enabled, hl_mode, ss_enabled, auto_close,
+              instance_timestamp)
 
     tracemalloc.stop()
