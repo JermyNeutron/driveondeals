@@ -74,27 +74,39 @@ def test_basic_search(test: bool, hints_enabled: bool,
     hints_enabled and print(f"{checkmark}")
 
     # 2: Verify Webpage
-    hints_enabled and print(f"HINT {__name__}: Step 2: {find_time()}: # Verify Webpage", end=" ")
-    expect(page).to_have_title(re.compile("Alamo Rent a Car"))
-    hints_enabled and print(f"{checkmark}")
+    try:
+        hints_enabled and print(f"HINT {__name__}: Step 2: {find_time()}: # Verify Webpage", end=" ")
+        expect(page).to_have_title(re.compile("Alamo Rent a Car"))
+        hints_enabled and print(f"{checkmark}")
+    except Exception as e:
+        hints_enabled and print(f'Error verifying page: {e}')
 
     # VARIABLE: Location Search
     # 3: Enter Pick Up Location
-    hints_enabled and print(f"HINT {__name__}: Step 3: {find_time()}: # Enter Pick Up Location", end=" ")
-    page.locator("#pickupLocation").fill(test_pu_location)
-    hints_enabled and print(f"{checkmark}")
+    try:
+        hints_enabled and print(f"HINT {__name__}: Step 3: {find_time()}: # Enter Pick Up Location", end=" ")
+        page.locator("#pickupLocation").fill(test_pu_location)
+        hints_enabled and print(f"{checkmark}")
+    except Exception as e:
+        hints_enabled and print(f'Error entering pick up locatoin: {e}')
     
     # VARIABLE: Location Selection
     # 4: Select First Populated Option
-    hints_enabled and print(f"HINT {__name__}: Step 4: {find_time()}: # Select First Populated Option: {test_pu_location} ...", end=" ") # VARIABLE: variable needs to change to reflect actual use case entry
-    page.wait_for_selector("role=option")
-    page.get_by_role("option").first.click()
-    hints_enabled and print(f"selected {test_pu_location} {checkmark}") # VARIABLE: variable needs to change to reflect actual use case
+    try:
+        hints_enabled and print(f"HINT {__name__}: Step 4: {find_time()}: # Select First Populated Option: {test_pu_location} ...", end=" ") # VARIABLE: variable needs to change to reflect actual use case entry
+        page.wait_for_selector("role=option")
+        page.get_by_role("option").first.click()
+        hints_enabled and print(f"selected {test_pu_location} {checkmark}") # VARIABLE: variable needs to change to reflect actual use case
+    except Exception as e:
+        hints_enabled and print(f'Error selecting location: {e}')
 
     # 5: Close Pop Up
-    hints_enabled and print(f"HINT {__name__}: Step 5: {find_time()}: # Close Pop Up", end=" ")
-    page.get_by_role("button", name="Close").click()
-    hints_enabled and print(f"{checkmark}")
+    try:
+        hints_enabled and print(f"HINT {__name__}: Step 5: {find_time()}: # Close Pop Up", end=" ")
+        page.get_by_role("button", name="Close").click()
+        hints_enabled and print(f"{checkmark}")
+    except Exception as e:
+        hints_enabled and print(f'Error closing pop-up: {e}')
 
     # 6: Necessary Timeout; Waits for pop up closure completion
     hints_enabled and print(f"HINT {__name__}: Step 6: {find_time()}: # Necessary Timeout ...", end=" ")
@@ -104,10 +116,13 @@ def test_basic_search(test: bool, hints_enabled: bool,
     # VARIABLE: Date
     # 7: Assign Current Date As Pick Up
     # Aria-label format: "Choose Saturday, October 12th, 2024"
-    hints_enabled and print(f"HINT {__name__}: Step 7: {find_time()}: # Assign Current Date As Pick Up", end=" ")
-    aria_label_pu = f"Choose {meta_krono[0].strftime('%A')}, {meta_krono[0].strftime('%B')} {meta_krono[1]}, {meta_krono[0].strftime('%Y')}"
-    date_to_select = page.locator(f'div[role="button"][aria-label="{aria_label_pu}"]').first
-    hints_enabled and print(f"{checkmark}\nHINT {__name__}: Step 7 (result): aria-label assigned {date_to_select} {checkmark}")
+    try:
+        hints_enabled and print(f"HINT {__name__}: Step 7: {find_time()}: # Assign Current Date As Pick Up", end=" ")
+        aria_label_pu = f"Choose {meta_krono[0].strftime('%A')}, {meta_krono[0].strftime('%B')} {meta_krono[1]}, {meta_krono[0].strftime('%Y')}"
+        date_to_select = page.locator(f'div[role="button"][aria-label="{aria_label_pu}"]').first
+        hints_enabled and print(f"{checkmark}\nHINT {__name__}: Step 7 (result): aria-label assigned {date_to_select} {checkmark}")
+    except Exception as e:
+        hints_enabled and print(f'Error finding aria-label: {e}')
 
     # 8: Check Date Visibility
     try:
@@ -121,12 +136,15 @@ def test_basic_search(test: bool, hints_enabled: bool,
         hints_enabled and print(f"{checkmark}")
 
     # 9: Date Click
-    hints_enabled and print(f"HINT {__name__}: Step 9: {find_time()}: Date Click ...", end=" ")
-    date_to_select.click()
-    hints_enabled and print(f"{checkmark}")
+    try:
+        hints_enabled and print(f"HINT {__name__}: Step 9: {find_time()}: Date Click ...", end=" ")
+        date_to_select.click()
+        hints_enabled and print(f"{checkmark}")
+    except Exception as e:
+        hints_enabled and print(f'Error clicking on the date: {e}')
 
     # 10:
-    # VARIABLE: Time Selection
+    # VARIABLE: Time Selection for separator
     hints_enabled and print(f"HINT {__name__}: Step 10: {find_time()}: # Time Selection... ")
     try:
         separator = page.locator('li[role="separator"]')
@@ -137,6 +155,7 @@ def test_basic_search(test: bool, hints_enabled: bool,
         print(f"HINT {__name__}: Step 11 (result) {find_time()}: Could not find separator: {e}")
 
     # 11:
+    # Time selection actual time
     try:
         hints_enabled and print(f"HINT {__name__}: Step 11: {find_time()}: Expecting next_option available time to be visible ...", end=" ")
         next_option_time = next_option_pu.first # resolves strict mode error (2 occurences) by picking first
@@ -164,10 +183,13 @@ def test_basic_search(test: bool, hints_enabled: bool,
     hints_enabled and print(f"HINT {__name__}: Step 12: {find_time()}: # Assigning Next Date As Pick Up ...")
     
     # variable, insert option to determine dx1rtn vs dx3rtn
-    next_day_meta = dx1rtn.main_simp(test, hints_enabled, meta_krono[0])
-    aria_label_do_date = f"Choose {next_day_meta[0].strftime('%A')}, {next_day_meta[0].strftime('%B')} {next_day_meta[1]}, {next_day_meta[0].strftime('%Y')}"
-    next_date_to_select = page.locator(f'div[role="button"][aria-label="{aria_label_do_date}"]').first
-    hints_enabled and print(f"HINT {__name__}: Step 12 (result): {find_time()}: aria-label assigned {next_date_to_select} {checkmark}")
+    try:
+        next_day_meta = dx1rtn.main_simp(test, hints_enabled, meta_krono[0])
+        aria_label_do_date = f"Choose {next_day_meta[0].strftime('%A')}, {next_day_meta[0].strftime('%B')} {next_day_meta[1]}, {next_day_meta[0].strftime('%Y')}"
+        next_date_to_select = page.locator(f'div[role="button"][aria-label="{aria_label_do_date}"]').first
+        hints_enabled and print(f"HINT {__name__}: Step 12 (result): {find_time()}: aria-label assigned {next_date_to_select} {checkmark}")
+    except Exception as e:
+        hints_enabled and print(f'Error locating pick up time: {e}')
     
     # 13: Drop Off Check Date Visibility
     try:
