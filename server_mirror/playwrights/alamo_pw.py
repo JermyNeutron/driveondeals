@@ -351,7 +351,10 @@ def main(
     for tgt_location in locations:
 # period iteration
         for window in rsv_windows:
-            execute_playwright(test, hints_enabled, instance_timestamp, tgt_location, window, page)
+            try:
+                execute_playwright(test, hints_enabled, instance_timestamp, tgt_location, window, page)
+            except Exception as e:
+                print(f'exception made for {tgt_location} on {window[0].strftime("%m-%d-%Y")}: {str(e)}')
 
 
 if __name__ == "__main__":
