@@ -46,8 +46,8 @@ Select choice: """))
 # 5) Lets Class 1
 
                 # remove, testing purposes only
-                rsv_windows = (datetime(2024, 12, 6, 5, 2, 29, 793524),
-                               datetime(2024, 12, 7, 5, 2, 29, 793524),
+                rsv_windows = (datetime(2024, 12, 19, 5, 2, 29, 793524),
+                               datetime(2024, 12, 20, 5, 2, 29, 793524),
                                7, 1, 'p7rtn1')
 
                 if choice == 1:
