@@ -79,7 +79,7 @@ def test_basic_search(test: bool, hints_enabled: bool,
         expect(page).to_have_title(re.compile("Alamo Rent a Car"))
         hints_enabled and print(f"{checkmark}")
     except Exception as e:
-        hints_enabled and print(f'Error verifying page: {e}')
+        hints_enabled and print(f'Error verifying page: {str(e)}')
 
     # VARIABLE: Location Search
     # 3: Enter Pick Up Location
@@ -88,7 +88,7 @@ def test_basic_search(test: bool, hints_enabled: bool,
         page.locator("#pickupLocation").fill(test_pu_location)
         hints_enabled and print(f"{checkmark}")
     except Exception as e:
-        hints_enabled and print(f'Error entering pick up locatoin: {e}')
+        hints_enabled and print(f'Error entering pick up locatoin: {str(e)}')
     
     # VARIABLE: Location Selection
     # 4: Select First Populated Option
@@ -98,7 +98,7 @@ def test_basic_search(test: bool, hints_enabled: bool,
         page.get_by_role("option").first.click()
         hints_enabled and print(f"selected {test_pu_location} {checkmark}") # VARIABLE: variable needs to change to reflect actual use case
     except Exception as e:
-        hints_enabled and print(f'Error selecting location: {e}')
+        hints_enabled and print(f'Error selecting location: {str(e)}')
 
     # 5: Close Pop Up
     try:
@@ -106,7 +106,7 @@ def test_basic_search(test: bool, hints_enabled: bool,
         page.get_by_role("button", name="Close").click()
         hints_enabled and print(f"{checkmark}")
     except Exception as e:
-        hints_enabled and print(f'Error closing pop-up: {e}')
+        hints_enabled and print(f'Error closing pop-up: {str(e)}')
 
     # 6: Necessary Timeout; Waits for pop up closure completion
     hints_enabled and print(f"HINT {__name__}: Step 6: {find_time()}: # Necessary Timeout ...", end=" ")
@@ -122,7 +122,7 @@ def test_basic_search(test: bool, hints_enabled: bool,
         date_to_select = page.locator(f'div[role="button"][aria-label="{aria_label_pu}"]').first
         hints_enabled and print(f"{checkmark}\nHINT {__name__}: Step 7 (result): aria-label assigned {date_to_select} {checkmark}")
     except Exception as e:
-        hints_enabled and print(f'Error finding aria-label: {e}')
+        hints_enabled and print(f'Error finding aria-label: {str(e)}')
 
     # 8: Check Date Visibility
     try:
@@ -141,7 +141,7 @@ def test_basic_search(test: bool, hints_enabled: bool,
         date_to_select.click()
         hints_enabled and print(f"{checkmark}")
     except Exception as e:
-        hints_enabled and print(f'Error clicking on the date: {e}')
+        hints_enabled and print(f'Error clicking on the date: {str(e)}')
 
     # 10:
     # VARIABLE: Time Selection for separator
@@ -152,7 +152,7 @@ def test_basic_search(test: bool, hints_enabled: bool,
         next_option_pu = separator.locator('xpath=following-sibling::li[@aria-disabled="false"][1]')
         hints_enabled and print(f"HINT {__name__}: Step 10 (result): {find_time()}: Next option found: {next_option_pu}")
     except Exception as e:
-        print(f"HINT {__name__}: Step 11 (result) {find_time()}: Could not find separator: {e}")
+        print(f"HINT {__name__}: Step 11 (result) {find_time()}: Could not find separator: {str(e)}")
 
     # 11:
     # Time selection actual time
@@ -175,7 +175,7 @@ def test_basic_search(test: bool, hints_enabled: bool,
         next_option_time.click()
         hints_enabled and print(f"and clicked {checkmark}")
     except Exception as e:
-        print(f"HINT {__name__}: Step 11: {find_time()}: Next available time unable to be selected: {e}")
+        print(f"HINT {__name__}: Step 11: {find_time()}: Next available time unable to be selected: {str(e)}")
 
     # 12. Default Return Date Search
     # Aria-label format: "Choose Saturday, October 12th, 2024"
@@ -189,7 +189,7 @@ def test_basic_search(test: bool, hints_enabled: bool,
         next_date_to_select = page.locator(f'div[role="button"][aria-label="{aria_label_do_date}"]').first
         hints_enabled and print(f"HINT {__name__}: Step 12 (result): {find_time()}: aria-label assigned {next_date_to_select} {checkmark}")
     except Exception as e:
-        hints_enabled and print(f'Error locating pick up time: {e}')
+        hints_enabled and print(f'Error locating pick up time: {str(e)}')
     
     # 13: Drop Off Check Date Visibility
     try:
@@ -208,7 +208,7 @@ def test_basic_search(test: bool, hints_enabled: bool,
         next_date_to_select.click()
         hints_enabled and print(f"{checkmark}")
     except Exception as e:
-        print(f"HINT {__name__}: Step 14: {find_time()}: Unable to click Drop Off Date: {e}")
+        print(f"HINT {__name__}: Step 14: {find_time()}: Unable to click Drop Off Date: {str(e)}")
 
     # 15: Return Next Available Time Search, trying to keep same return time as pick up
     hints_enabled and print(f"HINT {__name__}: Step 15: {find_time()}: Drop Off Time Visibility is", end=" ... ")

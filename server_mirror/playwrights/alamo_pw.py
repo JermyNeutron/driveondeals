@@ -128,7 +128,7 @@ def execute_playwright(test: bool, hints_enabled: bool, instance_timestamp: date
             print(f"HINT {__name__}: Step 10 (result): Next option found: {next_option_pu}")
         main_logger.info(f"{__name__}: Next option found: {next_option_pu}")
     except Exception as e:
-        main_logger.error(f"{__name__}: Could not find separator: {e}")
+        main_logger.error(f"{__name__}: Could not find separator: {str(e)}")
     hints_enabled and print(f"Step: 10 {checkmark}")
     # 11: Time Selection
     try:
@@ -144,7 +144,7 @@ def execute_playwright(test: bool, hints_enabled: bool, instance_timestamp: date
         expect(next_option_time).to_be_visible()
         next_option_time.click()
     except Exception as e:
-        main_logger.error(f"{__name__}: Next available time unable to be selected: {e}")
+        main_logger.error(f"{__name__}: Next available time unable to be selected: {str(e)}")
     hints_enabled and print(f"Step: 11 {checkmark}")
     # 12: Default Return Date Search
     # Aria-label format: "Choose Saturday, October 12th, 2024"
@@ -163,7 +163,7 @@ def execute_playwright(test: bool, hints_enabled: bool, instance_timestamp: date
     try:
         next_date_to_select.click()
     except Exception as e:
-        main_logger.error(f"{__name__}: Unable to click Drop Off date: {e}")
+        main_logger.error(f"{__name__}: Unable to click Drop Off date: {str(e)}")
     hints_enabled and print(f"Step: 14 {checkmark}")
     # 15: Return Next Available Time Search, trying to keep same return time as pick up
     aria_label_do_time = next_option_time.get_attribute('data-value')
@@ -189,7 +189,7 @@ def execute_playwright(test: bool, hints_enabled: bool, instance_timestamp: date
     # Checks if results page has loaded
     try:
         results_page = page.locator('h1[class="title__heading-text"]')
-        results_page.wait_for(timeout=10000)
+        results_page.wait_for(state='visible')
         hints_enabled and print(f"HINT {__name__}: Results page reached.")
 
 
@@ -220,10 +220,10 @@ def execute_playwright(test: bool, hints_enabled: bool, instance_timestamp: date
                 pax_span = element_pax.locator('span[class="vehicle-details-icon-list__icon--sr-only"]').text_content(timeout=param_timeout_2)
                 pax_text = pax_full.replace(pax_span, "").strip()
             except TimeoutError as e:
-                main_logger.debug(f'{__name__}: timeout exception made for {type_text}: {e}')
+                main_logger.debug(f'{__name__}: timeout exception made for {type_text}: {str(e)}')
                 pax_text = None
             except Exception as e:
-                main_logger.warning(f'{__name__}: unexpected exception made for {type_text}: {e}')
+                main_logger.warning(f'{__name__}: unexpected exception made for {type_text}: {str(e)}')
                 pax_text = None
 
             # # lug
@@ -233,10 +233,10 @@ def execute_playwright(test: bool, hints_enabled: bool, instance_timestamp: date
                 lug_span = element_lug.locator('span[class="vehicle-details-icon-list__icon--sr-only"]').text_content(timeout=param_timeout_2)
                 lug_text = lug_full.replace(lug_span, "").strip()
             except TimeoutError as te:
-                main_logger.debug(f'{__name__}: TimeoutError exception made for {type_text}: {te}')
+                main_logger.debug(f'{__name__}: TimeoutError exception made for {type_text}: {str(te)}')
                 lug_text = None
             except Exception as e:
-                main_logger.warning(f'{__name__}: Unexpected exception made for {type_text}: {e}')
+                main_logger.warning(f'{__name__}: Unexpected exception made for {type_text}: {str(e)}')
                 lug_text = None
 
             # data_dtm_track
@@ -331,11 +331,11 @@ def execute_playwright(test: bool, hints_enabled: bool, instance_timestamp: date
         page.screenshot(path=screenshot_path, full_page=True)
 
     except TimeoutError as e:
-        hints_enabled and print(f'{__name__}: No available rental vehicles located at {tgt_location} for {rsv_window[0].strftime("%m-%d-%Y")}: {e}')
-        main_logger.info(f'{__name__}: No available rental vehicles located at {tgt_location} for {rsv_window[0].strftime("%m-%d-%Y")}: {e}')
+        hints_enabled and print(f'{__name__}: No available rental vehicles located at {tgt_location} for {rsv_window[0].strftime("%m-%d-%Y")}: {str(e)}')
+        main_logger.info(f'{__name__}: No available rental vehicles located at {tgt_location} for {rsv_window[0].strftime("%m-%d-%Y")}: {str(e)}')
     except Exception as e:
-        hints_enabled and print(f"{__name__}: A new exception has been encountered: {e}")
-        main_logger.critical(f"{__name__}: A new exception has been encountered: {e}")
+        hints_enabled and print(f"{__name__}: A new exception has been encountered: {str(e)}")
+        main_logger.critical(f"{__name__}: A new exception has been encountered: {str(e)}")
 
 
 def main(
