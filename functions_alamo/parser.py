@@ -251,7 +251,7 @@ def lets_class_1(test: bool, hints_enabled: bool, meta_krono: tuple, next_day_me
     #         file.write(f"{i}\n")
 
     # auto update to populate known dtm trackers
-    dtm_update(False, hints_enabled, option_tuples_cleaned)
+    # dtm_update(False, hints_enabled, option_tuples_cleaned)
 
     # # add entries to database
     # create_db.db_update(test, hints_enabled, option_tuples_cleaned)
