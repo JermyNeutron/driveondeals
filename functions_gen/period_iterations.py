@@ -84,7 +84,7 @@ def nextday(
     if hints_enabled:
         print(
             f'HINT: {__name__}: Searching rentals for '
-            f'{pu_date.strftime("%m-%d-%Y")} - {do_date.strftime("%m-%d-%Y")}.'
+            f'{pu_date.strftime("%m-%d-%Y")} - {do_date.strftime("%m-%d-%Y")}'
         )
     return pu_date, do_date, 1, 1, "nextday"
 
@@ -105,7 +105,7 @@ def p7rtn1(
     if hints_enabled:
         print(
             f'HINT: {__name__}: Searching rentals for '
-            f'{pu_date.strftime("%m-%d-%Y")} - {do_date.strftime("%m-%d-%Y")}.'
+            f'{pu_date.strftime("%m-%d-%Y")} - {do_date.strftime("%m-%d-%Y")}'
         )
     return pu_date, do_date, 7, 1, "p7rtn1"
 
@@ -126,7 +126,7 @@ def p14rtn1(
     if hints_enabled:
         print(
             f'HINT: {__name__}: Searching rentals for '
-            f'{pu_date.strftime("%m-%d-%Y")} - {do_date.strftime("%m-%d-%Y")}.'
+            f'{pu_date.strftime("%m-%d-%Y")} - {do_date.strftime("%m-%d-%Y")}'
         )
     return pu_date, do_date, 14, 1, "p14rtn1"
 
@@ -147,7 +147,7 @@ def p30rtn1(
     if hints_enabled:
         print(
             f'HINT: {__name__}: Searching rentals for '
-            f'{pu_date.strftime("%m-%d-%Y")} - {do_date.strftime("%m-%d-%Y")}.'
+            f'{pu_date.strftime("%m-%d-%Y")} - {do_date.strftime("%m-%d-%Y")}'
         )
     return pu_date, do_date, 30, 1, "p30rtn1"
 
@@ -165,7 +165,8 @@ def main(
 ]:
     """
     Calculates reservation windows from instance_timestamp and returns
-    a tuple of nested tuples.
+    a tuple of nested tuples. If `test = True`, returning values are
+    encased in a list instead of a tuple.
 
     Parameters:
         test (bool):
@@ -197,7 +198,10 @@ def main(
     p30rtn1_tup = p30rtn1(test, hints_enabled, instance_timestamp)
     rsv_windows.append(p30rtn1_tup)
 
-    return tuple(rsv_windows)
+    if not test:
+        return tuple(rsv_windows)
+    else:
+        return rsv_windows
 
 
 if __name__ == "__main__":
@@ -207,5 +211,17 @@ if __name__ == "__main__":
     instance_timestamp = datetime.now()
 
     results = main(test, hints_enabled, instance_timestamp)
+
     for i in results:
         print(i)
+
+    rsv_window = [results.pop(3)]
+    
+    aria_label_pu = (
+    f"Choose {rsv_window[0][1].strftime('%A')}, "
+    f"{rsv_window[0][1].strftime('%B')} "
+    f"{rsv_window[0][1].strftime('%d')}, "
+    f"{rsv_window[0][1].strftime('%Y')}"
+    )
+
+    print(aria_label_pu)
