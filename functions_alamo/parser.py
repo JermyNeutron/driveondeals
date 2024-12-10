@@ -137,7 +137,7 @@ def check_mileage(page: Page):
         # print(f"h3: {h3}, is_unlimited: {mileage}")
 
 
-def lets_class_1(test: bool, hints_enabled: bool, meta_krono: tuple, next_day_meta: tuple, page: Page):
+def lets_class_1(test: bool, hints_enabled: bool, meta_krono: tuple, rsv_window: tuple, page: Page):
     # div
     epoch_ident = int(time.time())
     service_default = "Alamo"
@@ -212,9 +212,9 @@ def lets_class_1(test: bool, hints_enabled: bool, meta_krono: tuple, next_day_me
         # # Datetime calcutions
         date_scr_date = meta_krono[0].strftime("%Y-%m-%d")
         date_scr_int = int(meta_krono[0].strftime("%w"))
-        date_rsv_date = next_day_meta[0].strftime("%Y-%m-%d")
-        date_rsv_int = int(next_day_meta[0].strftime("%w"))
-        adv_rsv = (next_day_meta[0] - meta_krono[0]).days
+        date_rsv_date = rsv_window[0][0].strftime("%Y-%m-%d")
+        date_rsv_int = int(rsv_window[0][0].strftime("%w"))
+        adv_rsv = rsv_window[0][2]
 
         option_tuples.append((epoch_ident,
                               service_default,
@@ -245,10 +245,10 @@ def lets_class_1(test: bool, hints_enabled: bool, meta_krono: tuple, next_day_me
         print(i)
 
 
-    # # write to txt for testing
-    # with open("functions_alamo/example_tuples_test.txt", "w") as file:
-    #     for i in option_tuples_cleaned:
-    #         file.write(f"{i}\n")
+    # write to txt for testing
+    with open("functions_alamo/example_tuples_test.txt", "w") as file:
+        for i in option_tuples_cleaned:
+            file.write(f"{i}\n")
 
     # auto update to populate known dtm trackers
     # dtm_update(False, hints_enabled, option_tuples_cleaned)

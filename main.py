@@ -21,13 +21,13 @@ def get_instance_timestamp(test: bool, hints_enabled: bool) -> timedelta:
 
 def run_alamo(test: bool, hints_enabled: bool, hl_mode: bool,
               ss_enabled: bool, auto_close: bool,
-              instance_timestamp: datetime) -> None:
+              rsv_windows: tuple, instance_timestamp: datetime) -> None:
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=hl_mode)
         context = browser.new_context()
         page = context.new_page()
-        test_alamo.test_basic_search(test, hints_enabled, ss_enabled,
-                                     instance_timestamp, page) # change
+        test_alamo.main(test, hints_enabled, ss_enabled,
+                        instance_timestamp, rsv_windows, page) # change
         if auto_close:
             context.close()
             browser.close()
@@ -87,10 +87,11 @@ if __name__ == "__main__":
     create_db.create_database(test, hints_enabled)
 
     instance_timestamp = get_instance_timestamp(test, hints_enabled)
-    # rsv_windows = period_iterations.main(test, hints_enabled,
-    #                                      instance_timestamp)
 
-    run_alamo(test, hints_enabled, hl_mode, ss_enabled, auto_close,
-              instance_timestamp)
+    rsv_windows = period_iterations.main(test, hints_enabled,
+                                         instance_timestamp)
+
+    run_alamo(test, hints_enabled, hl_mode, ss_enabled,
+              auto_close, rsv_windows, instance_timestamp)
 
     tracemalloc.stop()
